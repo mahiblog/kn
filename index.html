@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Portal | কাজিম নাহইয়ান</title>
-    <!-- পার্মানেন্ট ফেভিকন (Favicon) সেট করা হলো -->
+    <!-- ট্যাবের কর্নারে গোল পার্মানেন্ট পিকচার (ফেভিকন) সেট করা হলো -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
         body { background-color: var(--bg-space); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
 
+        /* Floating Space Background Animation */
         .space-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at 50% 30%, #0c0221 0%, #030014 70%, #000000 100%); overflow: hidden; pointer-events: none; }
         
         .nebula-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(157, 78, 221, 0.18) 0%, rgba(0, 242, 254, 0.06) 50%, transparent 70%); top: -150px; left: -150px; border-radius: 50%; animation: floatNebula 18s ease-in-out infinite alternate; z-index: -2; filter: blur(40px); }
@@ -31,16 +32,17 @@
         @keyframes floatNebula { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(120px, 90px) scale(1.25); } }
         @keyframes floatNebula2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-140px, -110px) scale(1.3); } }
 
-        .box-of-star1, .box-of-star2, .box-of-star3, .box-of-star4 { width: 100%; position: absolute; z-index: -2; left: 0; top: 0; height: 1000px; pointer-events: none; opacity: 0.5; }
-        .box-of-star1 { animation: snow 5s linear infinite; }
-        .box-of-star2 { animation: snow 5s -1.64s linear infinite; }
-        .box-of-star3 { animation: snow 5s -2.30s linear infinite; }
-        .box-of-star4 { animation: snow 5s -3.30s linear infinite; }
-        @keyframes snow { 0% { opacity: 0; transform: translateY(0px); } 20% { opacity: 0.8; } 100% { opacity: 0.8; transform: translateY(800px); } }
+        /* Background Stars & Asteroids Effect (Increased density) */
+        .box-of-star1, .box-of-star2, .box-of-star3, .box-of-star4 { width: 100%; position: absolute; z-index: -2; left: 0; top: 0; height: 1000px; pointer-events: none; opacity: 0.8; }
+        .box-of-star1 { animation: snow 4s linear infinite; }
+        .box-of-star2 { animation: snow 4s -1s linear infinite; }
+        .box-of-star3 { animation: snow 4s -2s linear infinite; }
+        .box-of-star4 { animation: snow 4s -3s linear infinite; }
+        @keyframes snow { 0% { opacity: 0; transform: translateY(0px); } 20% { opacity: 1; } 100% { opacity: 1; transform: translateY(800px); } }
 
-        .star { width: 3px; height: 3px; border-radius: 50%; background-color: #FFF; position: absolute; }
-        .star:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: #FFF; position: absolute; top: 80px; left: 70px; opacity: .7; }
-        .star:after { content: ""; width: 8px; height: 8px; border-radius: 50%; background-color: #FFF; position: absolute; top: 8px; left: 170px; opacity: .9; }
+        .star { width: 3px; height: 3px; border-radius: 50%; background-color: #FFF; position: absolute; box-shadow: 0 0 6px #FFF; }
+        .star:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: var(--neon-cyan); position: absolute; top: 80px; left: 70px; opacity: .8; }
+        .star:after { content: ""; width: 5px; height: 5px; border-radius: 50%; background-color: var(--neon-purple); position: absolute; top: 200px; left: 170px; opacity: .9; }
         .star-position1 { top: 30px; left: 20px; }
         .star-position2 { top: 110px; left: 250px; }
         .star-position3 { top: 60px; left: 570px; }
@@ -49,12 +51,15 @@
         .star-position6 { top: 90px; left: 1280px; }
         .star-position7 { top: 30px; left: 1480px; }
 
-        .shooting-star-container { position: absolute; bottom: 0; width: 100%; height: 300px; overflow: hidden; pointer-events: none; z-index: 1; }
-        .shooting-star { position: absolute; width: 150px; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), transparent); transform: rotate(-45deg); animation: shoot 3s linear infinite; opacity: 0; }
-        .shooting-star:nth-child(1) { top: 20%; left: 80%; animation-delay: 0.5s; }
-        .shooting-star:nth-child(2) { top: 50%; left: 90%; animation-delay: 1.8s; }
-        .shooting-star:nth-child(3) { top: 10%; left: 60%; animation-delay: 2.5s; }
-        @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-700px) translateY(700px) rotate(-45deg); opacity: 0; } }
+        /* Abundant Shooting Stars / Comets */
+        .shooting-star-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1; }
+        .shooting-star { position: absolute; width: 180px; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), transparent); transform: rotate(-45deg); animation: shoot 2.2s linear infinite; opacity: 0; }
+        .shooting-star:nth-child(1) { top: 10%; left: 90%; animation-delay: 0.2s; }
+        .shooting-star:nth-child(2) { top: 30%; left: 75%; animation-delay: 0.9s; }
+        .shooting-star:nth-child(3) { top: 5%; left: 50%; animation-delay: 1.5s; }
+        .shooting-star:nth-child(4) { top: 45%; left: 95%; animation-delay: 2.1s; }
+        .shooting-star:nth-child(5) { top: 20%; left: 40%; animation-delay: 2.8s; }
+        @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-900px) translateY(900px) rotate(-45deg); opacity: 0; } }
 
         #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #010008; z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
         #loader-overlay.active { opacity: 1; visibility: visible; }
@@ -125,7 +130,7 @@
         @keyframes orbit { 0% { transform: rotate(0deg); } 50% { transform: rotate(-180deg); } 100% { transform: rotate(-360deg); } }
         @keyframes glow { 0% { box-shadow: none; } 50% { background: #ffeb00; box-shadow: 0 0 35px orange; } 100% { box-shadow: none; } }
 
-        /* --- Music Floating Button & Player UI --- */
+        /* Music Floating Button & Player UI */
         .music-float-btn {
             position: fixed;
             bottom: 20px;
@@ -440,16 +445,19 @@
 
     <div id="progress-container"><div id="progress-bar"></div></div>
     
+    <!-- Abundant Starry & Comets Space Background -->
     <div class="space-bg">
         <div class="nebula-glow"></div>
         <div class="nebula-glow-2"></div>
         
-        <div class="box-of-star1"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
-        <div class="box-of-star2"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
-        <div class="box-of-star3"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
-        <div class="box-of-star4"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
+        <div class="box-of-star1"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:250px; left:400px;"></div><div class="star" style="top:500px; left:750px;"></div></div>
+        <div class="box-of-star2"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:350px; left:200px;"></div><div class="star" style="top:650px; left:1050px;"></div></div>
+        <div class="box-of-star3"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:150px; left:850px;"></div><div class="star" style="top:450px; left:1300px;"></div></div>
+        <div class="box-of-star4"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:550px; left:500px;"></div><div class="star" style="top:750px; left:300px;"></div></div>
 
         <div class="shooting-star-container">
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
             <div class="shooting-star"></div>
             <div class="shooting-star"></div>
             <div class="shooting-star"></div>
@@ -665,7 +673,6 @@
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // মিউজিক ফেচ করা এবং অটো-প্লে (লক করা মিউজিক থাকলে) হ্যান্ডেল করা
         async function loadMusicPlaylist() {
             const { data } = await _supabase.from('music_tracks').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('musicPlaylistContainer');
@@ -689,10 +696,9 @@
                     container.appendChild(item);
                 });
 
-                // যদি অ্যাডমিন কোনো মিউজিক লক (Autoplay) করে রাখেন, তবে সাইটে ঢোকার সাথেই বাজবে
                 if (lockedTrack && !audioElem.src) {
                     audioElem.src = lockedTrack.audio_url;
-                    audioElem.play().catch(e => console.log("Autoplay restricted by browser, requires interaction."));
+                    audioElem.play().catch(e => console.log("Autoplay restricted by browser."));
                 }
             } else {
                 container.innerHTML = `<div style="font-size:0.780rem; color:var(--text-muted); text-align:center; padding:10px;">কোনো মিউজিক নেই। অ্যাডমিন প্যানেল থেকে যোগ করুন।</div>`;
@@ -707,31 +713,6 @@
             document.querySelectorAll('.music-item').forEach(el => el.classList.remove('active'));
             const activeElem = document.getElementById(`track_${id}`);
             if(activeElem) activeElem.classList.add('active');
-        }
-
-        // অ্যাডমিন প্যানেল থেকে মিউজিক আপলোড এবং লক করার ফাংশন (অ্যাডমিন প্যানেলের জন্য ব্যাকএন্ড লজিক)
-        async function uploadAdminMusic(file, title, isLocked) {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `music_${Date.now()}.${fileExt}`;
-            
-            // Supabase Storage-এর 'profile-pics' বা অন্য পাবলিক বাক্সে আপলোড
-            const { error: uploadError } = await _supabase.storage.from('profile-pics').upload(fileName, file);
-            if(uploadError) throw uploadError;
-
-            const { data: publicURLData } = _supabase.storage.from('profile-pics').getPublicUrl(fileName);
-            const audioUrl = publicURLData.publicUrl;
-
-            // যদি নতুন গানটি লক করা হয়, তবে আগের লকগুলো তুলে দেওয়া
-            if(isLocked) {
-                await _supabase.from('music_tracks').update({ is_locked: false }).neq('id', '0');
-            }
-
-            // ডাটাবেজে সেভ করা
-            await _supabase.from('music_tracks').insert([{
-                title: title,
-                audio_url: audioUrl,
-                is_locked: isLocked
-            }]);
         }
 
         function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
