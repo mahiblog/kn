@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Portal | Muktasin Mahi Blogs</title>
+    <title>Space Portal | কাজিম নাহইয়ান</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -450,7 +450,7 @@
         <section class="writer-hero">
             <div class="writer-avatar" id="writerAvatarDiv"><i class="fa-solid fa-user-astronaut"></i></div>
             <div class="writer-info">
-                <h1 id="writerNameTitle">Muktasin Mahi</h1>
+                <h1 id="writerNameTitle">কাজিম নাহইয়ান</h1>
                 <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and if you like them share with your friends, family and others. I shall keep writing blogs on various topics here so follow me and stay tuned.</p>
                 
                 <div style="margin-top: 15px;">
@@ -524,7 +524,7 @@
             <div class="asteriods-small" id="asteriod9"></div>
             <div class="asteriods-small" id="asteriod10"></div>
             <div id="saturn"></div>
-            <div id="explore"></div>
+            <div id="explore">Explore</div>
           </div>
         </button>
     </div>
@@ -573,14 +573,14 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to Writer(Muktasin Mahi)</h4>
+            <h4>Talk to কাজিম নাহইয়ান</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
         <div class="chat-footer" id="chatFooterContainer"></div>
     </div>
 
-    <footer><p>&copy; 2026 Kazim Nahian. All Cosmic Rights Reserved.</p></footer>
+    <footer><p>&copy; 2026 কাজিম নাহইয়ান. All Cosmic Rights Reserved.</p></footer>
 
     <script>
         function triggerLoaderAndExecute(callback) {
@@ -617,15 +617,70 @@
         let chatEmail = localStorage.getItem('chat_user_email') || null;
 
         async function initPortal() {
-            loadBrandingData();
+            await loadBrandingData();
             await fetchArticles();
         }
 
-        function loadBrandingData() {
+        async function loadBrandingData() {
             const savedName = localStorage.getItem('admin_name');
             const savedPic = localStorage.getItem('admin_pic');
             if(savedName) document.getElementById('writerNameTitle').innerText = savedName;
-            if(savedPic) document.getElementById('writerAvatarDiv').innerHTML = `<img src="${savedPic}" alt="Admin">`;
+            
+            if(savedPic) {
+                document.getElementById('writerAvatarDiv').innerHTML = `<img src="${savedPic}" alt="Admin">`;
+            } else {
+                // Supabase থেকে অ্যাডমিনের পার্মানেন্ট প্রোফাইল পিকচার চেক করা
+                const { data } = await _supabase.from('site_settings').select('*').eq('key', 'admin_pic').single();
+                if(data && data.value) {
+                    localStorage.setItem('admin_pic', data.value);
+                    document.getElementById('writerAvatarDiv').innerHTML = `<img src="${data.value}" alt="Admin">`;
+                }
+            }
+        }
+
+        // ক্লাউডে প্রোফাইল পিকচার আপলোড করার ফাংশন
+        async function uploadAdminProfilePic(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const loader = document.getElementById('loader-overlay');
+            if(loader) loader.classList.add('active');
+
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `admin_${Date.now()}.${fileExt}`;
+                const filePath = `${fileName}`;
+
+                const { data, error } = await _supabase.storage
+                    .from('profile-pics')
+                    .upload(filePath, file);
+
+                if (error) throw error;
+
+                const { data: publicURLData } = _supabase.storage
+                    .from('profile-pics')
+                    .getPublicUrl(filePath);
+
+                const publicUrl = publicURLData.publicUrl;
+
+                localStorage.setItem('admin_pic', publicUrl);
+                
+                // ডাটাবেজেও সেভ করে রাখা যাতে সব ভিজিটর দেখতে পায়
+                await _supabase.from('site_settings').upsert({ key: 'admin_pic', value: publicUrl });
+
+                const avatarDiv = document.getElementById('writerAvatarDiv');
+                if(avatarDiv) {
+                    avatarDiv.innerHTML = `<img src="${publicUrl}" alt="Admin">`;
+                }
+
+                alert('প্রোফাইল পিকচার সফলভাবে ক্লাউডে আপলোড এবং আপডেট হয়েছে!');
+
+            } catch (error) {
+                console.error('Error uploading image: ', error.message);
+                alert('ছবি আপলোড করতে সমস্যা হয়েছে: ' + error.message);
+            } finally {
+                if(loader) loader.classList.remove('active');
+            }
         }
 
         function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
