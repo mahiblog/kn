@@ -210,8 +210,8 @@
         #robotPopupOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(1, 0, 8, 0.85);
-            backdrop-filter: blur(15px);
+            background: rgba(1, 0, 8, 0.88);
+            backdrop-filter: blur(18px);
             z-index: 99999;
             display: none;
             justify-content: center;
@@ -222,8 +222,8 @@
         .robot-container-fly {
             position: absolute;
             opacity: 0;
-            transform: translate(-120vw, 80vh) scale(0.3) rotate(-30deg);
-            transition: transform 1.5s cubic-bezier(0.15, 0.85, 0.35, 1.2), opacity 1s ease;
+            transform: translate(-140vw, 90vh) scale(0.2) rotate(-45deg);
+            transition: transform 1.8s cubic-bezier(0.1, 0.9, 0.2, 1.1), opacity 1.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -234,9 +234,9 @@
             transform: translate(0, 0) scale(1) rotate(0deg);
         }
         .robot-container-fly.fly-out {
-            transform: translate(-40vw, 40vh) scale(0.1) rotate(45deg);
+            transform: translate(-45vw, 45vh) scale(0.08) rotate(50deg);
             opacity: 0;
-            transition: transform 1.2s cubic-bezier(0.6, -0.28, 0.735, 0.04), opacity 1s ease;
+            transition: transform 1.2s cubic-bezier(0.6, -0.3, 0.8, 0.1), opacity 1s ease;
         }
 
         /* EVA Robot CSS Styles */
@@ -330,12 +330,12 @@
             position: absolute;
             left: 50%;
             top: 30%;
-            border-top: 160px solid rgba(0, 242, 254, 0.55);
-            border-left: 140px solid transparent;
-            border-right: 140px solid transparent;
+            border-top: 170px solid rgba(0, 242, 254, 0.65);
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
             transform-origin: top center;
-            filter: drop-shadow(0 0 12px #00f2fe);
-            animation: holographicBeam 2.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 15px #00f2fe);
+            animation: holographicBeam 2s ease-in-out infinite alternate;
             pointer-events: none;
             z-index: 5;
         }
@@ -348,7 +348,7 @@
             top: 30%;
             transform: translateX(-50%);
             background: #ffffff;
-            box-shadow: 0 0 20px #00f2fe, inset 0px 0px 5px #04b8d5;
+            box-shadow: 0 0 22px #00f2fe, inset 0px 0px 6px #04b8d5;
             z-index: 6;
         }
 
@@ -357,32 +357,32 @@
         @keyframes compensateRotation { from { transform: rotateY(55deg) rotateZ(10deg); } to { transform: rotatey(30deg) rotateZ(10deg); } }
         @keyframes compensateRotationRight { from { transform: rotateY(55deg) rotateZ(-10deg); } to { transform: rotateY(70deg) rotateZ(-10deg); } }
         @keyframes holographicBeam {
-            0% { opacity: 0.4; filter: drop-shadow(0 0 8px #00f2fe); transform: translateX(-50%) scaleX(0.9); }
-            100% { opacity: 0.95; filter: drop-shadow(0 0 22px #00f2fe); transform: translateX(-50%) scaleX(1.1); }
+            0% { opacity: 0.5; filter: drop-shadow(0 0 10px #00f2fe); transform: translateX(-50%) scaleX(0.85); }
+            100% { opacity: 1; filter: drop-shadow(0 0 25px #00f2fe); transform: translateX(-50%) scaleX(1.15); }
         }
 
         /* Cinematic Projected Hologram Card */
         .projected-popup-card {
-            background: rgba(4, 8, 20, 0.94);
+            background: rgba(4, 8, 20, 0.95);
             border: 2px solid var(--neon-cyan);
             border-radius: 16px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 0 40px rgba(0, 242, 254, 0.5), inset 0 0 20px rgba(0, 242, 254, 0.25);
+            padding: 22px;
+            width: 310px;
+            box-shadow: 0 0 45px rgba(0, 242, 254, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.3);
             text-align: center;
-            margin-top: -10px;
+            margin-top: -12px;
             position: relative;
             z-index: 100001;
             opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.4);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.3);
         }
         .projected-popup-card.show-card {
             opacity: 1;
             transform: scale(1);
         }
-        .projected-popup-card h4 { font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 0.95rem; margin-bottom: 8px; text-shadow: 0 0 10px rgba(0,242,254,0.4); }
-        .projected-popup-card p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5; }
+        .projected-popup-card h4 { font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 0.98rem; margin-bottom: 8px; text-shadow: 0 0 12px rgba(0,242,254,0.5); }
+        .projected-popup-card p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
         .popup-action-btns { display: flex; gap: 10px; justify-content: center; }
 
         .about-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 0, 8, 0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
@@ -591,7 +591,8 @@
         .main:is(:active) > #explore { translate: -100px 200px; }
         .main:is(:active) { translate: -200px; }
 
-        footer { text-align: center; padding: 25px; background: rgba(3, 0, 20, 0.9); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.82rem; margin-top: 20px; position: relative; z-index: 2; }
+        footer { text-align: center; padding: 25px; background: rgba(3, 0, 20, 0.9); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; margin-top: 20px; position: relative; z-index: 2; line-height: 1.6; }
+        footer span { color: var(--neon-cyan); font-weight: 600; }
 
         @media(max-width: 480px) {
             .writer-hero { padding: 20px; gap: 15px; }
@@ -710,7 +711,7 @@
                 <img src="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I" alt="Admin Profile">
             </div>
             <div class="writer-info">
-                <h1 id="writerNameTitle">Muktasin Mahi</h1>
+                <h1 id="writerNameTitle">কাজিম নাহইয়ান</h1>
                 <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and if you like them share with your friends, family and others. I shall keep writing blogs on various topics here so follow me and stay tuned.</p>
                 
                 <div style="margin-top: 15px;">
@@ -826,14 +827,17 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to Writer (Muktasin Mahi)</h4>
+            <h4>Talk to Write (Muktasin Mahi)</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
         <div class="chat-footer" id="chatFooterContainer"></div>
     </div>
 
-    <footer><p>&copy; 2026 Kazim Nahian. All Cosmic Rights Reserved.</p></footer>
+    <footer>
+        <p>&copy; 2026 <span>Kazim Nahian</span> | Mobile : 09638183029 | KNWeb</p>
+        <p>All Cosmic Rights Reserved.</p>
+    </footer>
 
     <script>
         function triggerLoaderAndExecute(callback) {
@@ -855,9 +859,7 @@
 
             // সাইটে ঢোকার ঠিক ৪ সেকেন্ড পর ইভা রোবটটি চমৎকারভাবে উড়ে এসে হাজির হবে
             setTimeout(() => {
-                if(!localStorage.getItem('eva_music_popup_shown')) {
-                    showRobotPopup();
-                }
+                showRobotPopup();
             }, 4000);
         });
 
@@ -931,6 +933,10 @@
             const robotFly = document.getElementById('robotFlyWrapper');
             const popupCard = document.getElementById('projectedCardBox');
 
+            // রিসেট অ্যানিমেশন ক্লাস
+            robotFly.classList.remove('fly-in', 'fly-out');
+            popupCard.classList.remove('show-card');
+
             overlay.style.display = 'flex';
             
             // রোবট উড়ে আসার অ্যানিমেশন ট্রিগার
@@ -941,11 +947,10 @@
             // রোবট সেন্টারে আসার পর বুক থেকে লেজার প্রজেকশন কার্ডটি ওপেন হবে
             setTimeout(() => {
                 popupCard.classList.add('show-card');
-            }, 1200);
+            }, 1400);
         }
 
         function handleRobotMusicChoice(yes) {
-            localStorage.setItem('eva_music_popup_shown', 'true');
             const overlay = document.getElementById('robotPopupOverlay');
             const robotFly = document.getElementById('robotFlyWrapper');
             const popupCard = document.getElementById('projectedCardBox');
