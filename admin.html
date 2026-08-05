@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Muktasin Mahi</title>
+    <title>Admin Dashboard | কাজিম নাহইয়ান</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -47,7 +47,8 @@
         
         .reply-box { display: flex; gap: 5px; margin-top: 5px; }
         .reply-input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 6px; border-radius: 6px; color: white; font-size: 0.8rem; outline: none; }
-        
+        .badge-lock { background: rgba(0, 242, 254, 0.15); color: var(--neon-cyan); padding: 3px 8px; border-radius: 5px; font-size: 0.75rem; border: 1px solid var(--neon-cyan); }
+
         @media(max-width: 800px) { .grid-section { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -79,7 +80,7 @@
                 <h3><i class="fa-solid fa-user-gear"></i> Profile & Logo Setup</h3>
                 <div class="admin-form-group">
                     <label>Admin Name</label>
-                    <input type="text" id="profileName" class="admin-input" value="Muktasin Mahi">
+                    <input type="text" id="profileName" class="admin-input" value="কাজিম নাহইয়ান">
                 </div>
                 <div class="admin-form-group">
                     <label>Upload Profile Picture</label>
@@ -123,6 +124,41 @@
                     <textarea id="newDesc" class="admin-input" rows="2" placeholder="Description..."></textarea>
                 </div>
                 <button class="btn-neon" onclick="publishContentDirect()">Publish to Cloud</button>
+            </div>
+        </div>
+
+        <!-- Study & Sci-Fi Music Cloud Manager -->
+        <div class="card-box">
+            <h3><i class="fa-solid fa-music"></i> Study & Sci-Fi Music Cloud Manager</h3>
+            <div class="grid-section" style="margin-bottom: 0;">
+                <div class="admin-form-group">
+                    <label>Music Title (e.g., Interstellar Ambient)</label>
+                    <input type="text" id="musicTitleInput" class="admin-input" placeholder="ট্র্যাকের নাম লিখুন...">
+                </div>
+                <div class="admin-form-group">
+                    <label>Audio File (.mp3)</label>
+                    <input type="file" id="musicFileInput" class="admin-input" accept="audio/*">
+                </div>
+            </div>
+            <div class="admin-form-group" style="display: flex; align-items: center; gap: 10px; margin: 15px 0;">
+                <input type="checkbox" id="musicLockCheckbox" style="width: 18px; height: 18px; accent-color: var(--neon-cyan);">
+                <label for="musicLockCheckbox" style="color: white; cursor: pointer; margin-bottom: 0;">Lock as Default Autoplay Music (সাইটে ঢুকলেই অটো বাজবে)</label>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 10px 25px;" onclick="uploadMusicTrack()"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Music</button>
+
+            <div style="overflow-x: auto; margin-top: 15px;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Autoplay Lock Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminMusicTableBody">
+                        <tr><td colspan="3" style="text-align:center;">Loading music tracks...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -206,7 +242,7 @@
                 document.getElementById('dashboardScreen').style.display = 'block';
                 loadAdminData();
             } else {
-                alert('ভুল আইডি বা পাসওয়ার্ড!');
+                alert('ভুল আইডি বা পাসওয়ার্ড!');
             }
         }
 
@@ -220,19 +256,34 @@
             loadAdminArticles();
             loadAdminInbox();
             loadMemberList();
+            loadAdminMusicList();
             const savedName = localStorage.getItem('admin_name');
             if(savedName) document.getElementById('profileName').value = savedName;
         }
 
+        // ফাইলের নাম থেকে বাংলা, স্পেস এবং জটিল চিহ্ন পরিষ্কার করে সেফ নাম তৈরি করার ফাংশন
         async function uploadFileToBucket(fileObj) {
             if (!fileObj) return null;
-            const fileName = `${Date.now()}_${fileObj.name}`;
-            const { data, error } = await _supabase.storage.from('uploads').upload(fileName, fileObj);
+            
+            // ফাইলের এক্সটেনশন আলাদা করা (যেমন: .mp3 বা .jpg)
+            const fileExt = fileObj.name.split('.').pop();
+            // নাম থেকে স্পেস, বাংলা ও অন্যান্য স্পেশাল ক্যারেক্টার বাদ দিয়ে শুধু ইংরেজি ও সংখ্যা রাখা
+            const safeName = fileObj.name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
+            const fileName = `${Date.now()}_${safeName}.${fileExt}`;
+
+            const { data, error } = await _supabase.storage
+                .from('profile-pics')
+                .upload(fileName, fileObj, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
             if (error) {
-                alert('ফাইল আপলোড ব্যর্থ হয়েছে! Supabase-এ "uploads" নামে পাবলিক বাককেট চেক করুন।');
+                console.error("Storage Error:", error);
+                alert('ফাইল আপলোড ব্যর্থ হয়েছে! মেইন ত্রুটি: ' + error.message);
                 return null;
             }
-            const { data: publicURLData } = _supabase.storage.from('uploads').getPublicUrl(fileName);
+            const { data: publicURLData } = _supabase.storage.from('profile-pics').getPublicUrl(fileName);
             return publicURLData.publicUrl;
         }
 
@@ -253,7 +304,7 @@
                 logoUrl = await uploadFileToBucket(logoFile);
                 if(logoUrl) localStorage.setItem('site_logo', logoUrl);
             }
-            alert('ব্র্যান্ডিং ও প্রোফাইল সফলভাবে আপডেট হয়েছে!');
+            alert('ব্র্যান্ডিং ও প্রোফাইল সফলভাবে আপডেট হয়েছে!');
         }
 
         async function publishContentDirect() {
@@ -286,7 +337,7 @@
 
             const { error } = await _supabase.from('articles').insert([newPost]);
             if(!error) {
-                alert('সফলভাবে ক্লাউডে পাবলিশ হয়েছে!');
+                alert('সফলভাবে ক্লাউডে পাবলিশ হয়েছে!');
                 document.getElementById('newTitle').value = '';
                 document.getElementById('newTag').value = '';
                 document.getElementById('newDesc').value = '';
@@ -294,8 +345,80 @@
                 document.getElementById('customDate').value = '';
                 loadAdminArticles();
             } else {
-                alert('পাবলিশ করতে সমস্যা হয়েছে।');
+                alert('পাবলিশ করতে সমস্যা হয়েছে।');
             }
+        }
+
+        async function uploadMusicTrack() {
+            const titleInput = document.getElementById('musicTitleInput');
+            const fileInput = document.getElementById('musicFileInput');
+            const isLocked = document.getElementById('musicLockCheckbox').checked;
+
+            const title = titleInput.value.trim();
+            const file = fileInput.files[0];
+
+            if(!title || !file) { alert('মিউজিক টাইটেল এবং এমপিথ্রি ফাইল সিলেক্ট করুন!'); return; }
+
+            const audioUrl = await uploadFileToBucket(file);
+            if(!audioUrl) return;
+
+            if(isLocked) {
+                await _supabase.from('music_tracks').update({ is_locked: false }).neq('id', '00000000-0000-0000-0000-000000000000');
+            }
+
+            const { error } = await _supabase.from('music_tracks').insert([{
+                title: title,
+                audio_url: audioUrl,
+                is_locked: isLocked
+            }]);
+
+            if(!error) {
+                alert('মিউজিক সফলভাবে ক্লাউডে আপলোড ও সেভ হয়েছে!');
+                titleInput.value = '';
+                fileInput.value = '';
+                document.getElementById('musicLockCheckbox').checked = false;
+                loadAdminMusicList();
+            } else {
+                alert('মিউজিক সেভ করতে সমস্যা হয়েছে।');
+            }
+        }
+
+        async function loadAdminMusicList() {
+            const tbody = document.getElementById('adminMusicTableBody');
+            const { data } = await _supabase.from('music_tracks').select('*').order('created_at', { ascending: false });
+            
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">কোনো মিউজিক ট্র্যাক নেই।</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            data.forEach(track => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${track.title}</b></td>
+                    <td>${track.is_locked ? '<span class="badge-lock"><i class="fa-solid fa-lock"></i> Locked (Autoplay)</span>' : '<span style="color:var(--text-muted);">Normal</span>'}</td>
+                    <td>
+                        <button class="btn-neon" style="padding: 4px 10px; font-size:0.75rem; width:auto; display:inline-block; margin-right:5px;" onclick="setTrackLock('${track.id}')">Toggle Lock</button>
+                        <button class="btn-neon" style="background:#ef4444; padding: 4px 10px; font-size:0.75rem; width:auto; display:inline-block;" onclick="deleteTrack('${track.id}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function setTrackLock(id) {
+            await _supabase.from('music_tracks').update({ is_locked: false }).neq('id', '00000000-0000-0000-0000-000000000000');
+            await _supabase.from('music_tracks').update({ is_locked: true }).eq('id', id);
+            alert('লক স্ট্যাটাস আপডেট করা হয়েছে!');
+            loadAdminMusicList();
+        }
+
+        async function deleteTrack(id) {
+            if(!confirm('ট্র্যাকটি ডিলিট করতে চান?')) return;
+            await _supabase.from('music_tracks').delete().eq('id', id);
+            alert('ট্র্যাক সফলভাবে ডিলিট করা হয়েছে!');
+            loadAdminMusicList();
         }
 
         async function loadAdminArticles() {
@@ -321,7 +444,7 @@
         async function deleteArticle(id) {
             if(!confirm('আপনি কি নিশ্চিত এই পোস্টটি ডিলিট করতে চান?')) return;
             await _supabase.from('articles').delete().eq('id', id);
-            alert('পোস্ট সফলভাবে ডিলিট করা হয়েছে!');
+            alert('পোস্ট সফলভাবে ডিলিট করা হয়েছে!');
             loadAdminArticles();
         }
 
@@ -340,7 +463,6 @@
                 const logDate = new Date(log.created_at);
                 const diffDays = (now - logDate) / (1000 * 60 * 60 * 24);
 
-                // Auto delete messages older than 7 days
                 if (diffDays > 7) {
                     await _supabase.from('chat_logs').delete().eq('id', log.id);
                     continue;
@@ -373,18 +495,18 @@
             }]);
 
             if(!error) {
-                alert('রিপ্লাই সফলভাবে পাঠানো হয়েছে!');
+                alert('রিপ্লাই সফলভাবে পাঠানো হয়েছে!');
                 document.getElementById(`reply_${logId}`).value = '';
                 loadAdminInbox();
             } else {
-                alert('রিপ্লাই পাঠাতে সমস্যা হয়েছে।');
+                alert('রিপ্লাই পাঠাতে সমস্যা হয়েছে।');
             }
         }
 
         async function deleteChatLog(id) {
             if(!confirm('এই মেসেজটি ডিলিট করতে চান?')) return;
             await _supabase.from('chat_logs').delete().eq('id', id);
-            alert('মেসেজ ডিলিট করা হয়েছে!');
+            alert('মেসেজ ডিলিট করা হয়েছে!');
             loadAdminInbox();
         }
 
