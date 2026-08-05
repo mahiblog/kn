@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Portal | Muktasin Mahi Blogs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-space: #010008;
+            --surface: rgba(10, 15, 30, 0.85);
+            --neon-cyan: #00f2fe;
+            --neon-purple: #9d4edd;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 35px rgba(0, 242, 254, 0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        body { background-color: var(--bg-space); color: var(--text-main); min-height: 100vh; overflow-x: hidden; position: relative; }
+
+        /* Floating Space Background Animation */
+        .space-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at 50% 30%, #0c0221 0%, #030014 70%, #000000 100%); overflow: hidden; pointer-events: none; }
+        
+        .nebula-glow { position: absolute; width: 700px; height: 700px; background: radial-gradient(circle, rgba(157, 78, 221, 0.18) 0%, rgba(0, 242, 254, 0.06) 50%, transparent 70%); top: -150px; left: -150px; border-radius: 50%; animation: floatNebula 18s ease-in-out infinite alternate; z-index: -2; filter: blur(40px); }
+        .nebula-glow-2 { position: absolute; width: 800px; height: 800px; background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(67, 97, 238, 0.05) 50%, transparent 70%); bottom: -200px; right: -200px; border-radius: 50%; animation: floatNebula2 22s ease-in-out infinite alternate; z-index: -2; filter: blur(50px); }
+        
+        @keyframes floatNebula { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(120px, 90px) scale(1.25); } }
+        @keyframes floatNebula2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-140px, -110px) scale(1.3); } }
+
+        /* Background Stars Effect */
+        .box-of-star1, .box-of-star2, .box-of-star3, .box-of-star4 { width: 100%; position: absolute; z-index: -2; left: 0; top: 0; height: 1000px; pointer-events: none; opacity: 0.5; }
+        .box-of-star1 { animation: snow 5s linear infinite; }
+        .box-of-star2 { animation: snow 5s -1.64s linear infinite; }
+        .box-of-star3 { animation: snow 5s -2.30s linear infinite; }
+        .box-of-star4 { animation: snow 5s -3.30s linear infinite; }
+        @keyframes snow { 0% { opacity: 0; transform: translateY(0px); } 20% { opacity: 0.8; } 100% { opacity: 0.8; transform: translateY(800px); } }
+
+        .star { width: 3px; height: 3px; border-radius: 50%; background-color: #FFF; position: absolute; }
+        .star:before { content: ""; width: 6px; height: 6px; border-radius: 50%; background-color: #FFF; position: absolute; top: 80px; left: 70px; opacity: .7; }
+        .star:after { content: ""; width: 8px; height: 8px; border-radius: 50%; background-color: #FFF; position: absolute; top: 8px; left: 170px; opacity: .9; }
+        .star-position1 { top: 30px; left: 20px; }
+        .star-position2 { top: 110px; left: 250px; }
+        .star-position3 { top: 60px; left: 570px; }
+        .star-position4 { top: 120px; left: 900px; }
+        .star-position5 { top: 20px; left: 1120px; }
+        .star-position6 { top: 90px; left: 1280px; }
+        .star-position7 { top: 30px; left: 1480px; }
+
+        /* Shooting Stars / Comets */
+        .shooting-star-container { position: absolute; bottom: 0; width: 100%; height: 300px; overflow: hidden; pointer-events: none; z-index: 1; }
+        .shooting-star { position: absolute; width: 150px; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), transparent); transform: rotate(-45deg); animation: shoot 3s linear infinite; opacity: 0; }
+        .shooting-star:nth-child(1) { top: 20%; left: 80%; animation-delay: 0.5s; }
+        .shooting-star:nth-child(2) { top: 50%; left: 90%; animation-delay: 1.8s; }
+        .shooting-star:nth-child(3) { top: 10%; left: 60%; animation-delay: 2.5s; }
+        @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-700px) translateY(700px) rotate(-45deg); opacity: 0; } }
+
+        /* Rocket Loading Screen */
+        #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #010008; z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
+        #loader-overlay.active { opacity: 1; visibility: visible; }
+        .rocket-loading-wrapper { display: flex; height: 300px; width: 300px; justify-content: center; align-items: center; position: relative; flex-direction: column; }
+        .moon-load { background-color: #39beff; height: 140px; width: 140px; border-radius: 50%; position: absolute; margin: auto; left: 0; right: 0; top: 0; bottom: 0; overflow: hidden; box-shadow: inset -15px 0 0 rgba(0,0,0,0.15); }
+        .crater-load { background-color: #31b4ff; height: 25px; width: 25px; border-radius: 50%; position: relative; }
+        .crater-load1 { top: 20px; left: 70px; transform: scale(0.9); }
+        .crater-load2 { bottom: 10px; left: 50px; transform: scale(0.6); }
+        .crater-load3 { left: 10px; top: 5px; transform: scale(0.75); }
+        .orbit-load { height: 220px; width: 220px; border-radius: 50%; position: absolute; margin: auto; left: 0; right: 0; top: 0; bottom: 0; animation: spinRocket 8s infinite linear; }
+        @keyframes spinRocket { 100% { transform: rotate(360deg); } }
+        .rocket-item { background-color: #fafcf7; height: 45px; width: 22px; border-radius: 50% 50% 0 0; position: relative; left: -10px; top: 88px; }
+        .rocket-item:before { content: ""; position: absolute; background-color: #39beff; height: 18px; width: 48px; border-radius: 50% 50% 0 0; z-index: -1; right: -13px; bottom: 0; }
+        .rocket-item .fire { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); width: 10px; height: 25px; background: radial-gradient(ellipse at center, #ffec85 0%, #ffae34 40%, #ec760c 70%, #cd4606 90%, rgba(0,0,0,0) 100%); border-radius: 50%; animation: flame 0.3s infinite alternate; z-index: -1; }
+        @keyframes flame { 0% { transform: translateX(-50%) scaleY(1); opacity: 0.9; } 100% { transform: translateX(-50%) scaleY(1.4); opacity: 0.5; } }
+        .window-load { background-color: #151845; height: 8px; width: 8px; border: 2px solid #b8d2ec; border-radius: 50%; position: relative; top: 14px; left: 5px; }
+        .curve-load { width: 100%; height: 100%; position: absolute; animation: rotateCurve 8s linear infinite; fill: transparent; }
+        @keyframes rotateCurve { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .curve-load text { letter-spacing: 12px; text-transform: uppercase; font: 1.1em "Orbitron", sans-serif; fill: #95d5ff; filter: drop-shadow(0 2px 8px rgb(21, 117, 207)); }
+
+        #progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: rgba(255, 255, 255, 0.05); z-index: 10000; }
+        #progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); box-shadow: 0 0 15px var(--neon-cyan); transition: width 0.1s ease-out; }
+
+        header { background: rgba(3, 0, 20, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 4px; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
+        .nav-menu { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .nav-menu a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        .nav-menu a:hover { color: var(--neon-cyan); }
+
+        .btn-neon { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.85rem; border: none; cursor: pointer; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-neon:hover { box-shadow: 0 0 25px var(--neon-cyan); transform: translateY(-2px); }
+
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 15px; display: flex; flex-direction: column; gap: 30px; position: relative; z-index: 2; }
+
+        /* Writer Hero Section */
+        .writer-hero { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 20px; padding: 35px; display: flex; align-items: center; gap: 25px; box-shadow: var(--glow); position: relative; overflow: hidden; width: 100%; text-align: center; justify-content: center; flex-wrap: wrap; }
+        .writer-hero::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); }
+        .writer-avatar { width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: var(--neon-cyan); border: 2px solid var(--neon-cyan); box-shadow: 0 0 25px rgba(0, 242, 254, 0.3); flex-shrink: 0; overflow: hidden; margin: 0 auto; }
+        .writer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .writer-info { flex: 1; min-width: 280px; }
+        .writer-info h1 { font-family: 'Orbitron', sans-serif; font-size: 1.7rem; color: white; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .writer-info p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin: 0 auto; max-width: 800px; }
+
+        /* Cosmic Showcase Box with 7 Planets */
+        .cosmic-showcase-box { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid rgba(0, 242, 254, 0.15); border-radius: 20px; padding: 35px; margin-bottom: 30px; box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 242, 254, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        
+        .widgets-row-container { display: flex; align-items: center; justify-content: center; width: 100%; padding: 15px 0; }
+
+        /* 7 Planets Solar System Widget */
+        .planet-widget-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 320px; position: relative; }
+        .solar { margin: 0 auto; height: 50px; width: 50px; background: orange; border-radius: 25px; position: relative; animation: glow 3s linear infinite; transform: scale(1.1); }
+        .solar i { border-radius: 250px; display: block; position: absolute; border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box; transform-origin: 50% 50%; }
+        .solar i:before { content: ""; border-radius: 25px; background: black; display: block; position: absolute; top: -5px; right: 45%; }
+        
+        .solar i.mercury { width: 90px; height: 90px; margin-left: -45px; left: 50%; top: 50%; margin-top: -45px; animation: orbit 3s linear infinite; }
+        .solar i.mercury:before { background: #8c8c8c; height: 6px; width: 6px; }
+        .solar i.venus { width: 130px; height: 130px; margin-left: -65px; left: 50%; top: 50%; margin-top: -65px; animation: orbit 5s linear infinite; }
+        .solar i.venus:before { background: #e3bb76; height: 8px; width: 8px; }
+        .solar i.earth { width: 170px; height: 170px; margin-left: -85px; left: 50%; top: 50%; margin-top: -85px; animation: orbit 7s linear infinite; }
+        .solar i.earth:before { background: #4b9cd3; height: 9px; width: 9px; }
+        .solar i.mars { width: 210px; height: 210px; margin-left: -105px; left: 50%; top: 50%; margin-top: -105px; animation: orbit 9s linear infinite; }
+        .solar i.mars:before { background: #ff6b6b; height: 8px; width: 8px; }
+        .solar i.jupiter { width: 260px; height: 260px; margin-left: -130px; left: 50%; top: 50%; margin-top: -130px; animation: orbit 12s linear infinite; }
+        .solar i.jupiter:before { background: #deb887; height: 12px; width: 12px; }
+        .solar i.saturn { width: 310px; height: 310px; margin-left: -155px; left: 50%; top: 50%; margin-top: -155px; animation: orbit 15s linear infinite; }
+        .solar i.saturn:before { background: #f4d03f; height: 11px; width: 11px; }
+        .solar i.uranus { width: 360px; height: 360px; margin-left: -180px; left: 50%; top: 50%; margin-top: -180px; animation: orbit 18s linear infinite; }
+        .solar i.uranus:before { background: #7fb3d5; height: 10px; width: 10px; }
+
+        @keyframes orbit { 0% { transform: rotate(0deg); } 50% { transform: rotate(-180deg); } 100% { transform: rotate(-360deg); } }
+        @keyframes glow { 0% { box-shadow: none; } 50% { background: #ffeb00; box-shadow: 0 0 35px orange; } 100% { box-shadow: none; } }
+
+        /* About Modal */
+        .about-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 0, 8, 0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .about-modal-box { background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px 25px; width: 100%; max-width: 500px; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); position: relative; text-align: left; }
+        .close-about-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .close-about-modal:hover { color: var(--neon-cyan); }
+        
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+        .about-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; }
+        .about-item strong { color: var(--neon-cyan); display: block; margin-bottom: 3px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
+
+        .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.25rem; color: white; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        .section-title i { color: var(--neon-cyan); }
+
+        .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .article-card { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: var(--glow); display: flex; flex-direction: column; justify-content: space-between; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .article-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 10px 35px rgba(0, 242, 254, 0.3); }
+        
+        .card-img-container { position: relative; width: 100%; height: 260px; background: #010008; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: contain; background: #010008; transition: 0.6s ease; }
+        .article-card:hover .card-img { transform: scale(1.03); }
+        
+        .card-details { padding: 20px; }
+        .card-meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .card-tag { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--neon-cyan); }
+        .card-title { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: white; margin-bottom: 10px; font-weight: 700; }
+        .card-desc { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+        .blog-actions { display: flex; gap: 8px; border-top: 1px solid var(--border); padding-top: 12px; flex-wrap: wrap; }
+        .action-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .action-btn:hover { background: var(--neon-cyan); color: var(--bg-space); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
+
+        .full-article-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.94); backdrop-filter: blur(25px); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
+        .full-article-content { max-width: 750px; margin: 30px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
+        .close-full-article { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
+        .close-full-article:hover { color: var(--neon-cyan); }
+
+        .blog-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin: 20px 0; }
+        .blog-gallery-grid img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
+        .blog-gallery-grid img:hover { transform: scale(1.04); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
+
+        .comment-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px; }
+        .comment-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 180px; overflow-y: auto; }
+        .comment-item { background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; }
+        .comment-input-box { display: flex; gap: 8px; flex-wrap: wrap; }
+        .comment-input { flex: 1; min-width: 200px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; font-size: 0.85rem; outline: none; }
+        .comment-input:focus { border-color: var(--neon-cyan); }
+        .btn-comment { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .modal-box { background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px 20px; width: 100%; max-width: 360px; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: center; position: relative; }
+        .modal-box h3 { font-family: 'Orbitron', sans-serif; color: white; margin-bottom: 12px; font-size: 1.2rem; }
+        .modal-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: white; font-size: 0.9rem; outline: none; margin-bottom: 15px; }
+        .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
+
+        /* Mini Logo Chat Float Button */
+        .chat-float-btn { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); 
+            color: white; 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 50%; 
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.3rem; 
+            z-index: 999; 
+            border: 2px solid rgba(255,255,255,0.3); 
+            transition: 0.3s ease; 
+        }
+        .chat-float-btn:hover { 
+            transform: scale(1.15) rotate(10deg); 
+            box-shadow: 0 0 35px var(--neon-cyan); 
+        }
+
+        .chat-modal { position: fixed; bottom: 80px; right: 20px; width: 90%; max-width: 360px; background: rgba(8, 11, 22, 0.96); backdrop-filter: blur(25px); border: 1px solid var(--neon-cyan); border-radius: 20px; box-shadow: 0 15px 50px rgba(0, 242, 254, 0.3); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
+        .chat-header { background: rgba(0, 242, 254, 0.08); border-bottom: 1px solid var(--border); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.95rem; }
+        .chat-body { padding: 15px; height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: rgba(2, 1, 10, 0.85); }
+        .message { padding: 9px 12px; border-radius: 12px; font-size: 0.82rem; max-width: 85%; }
+        .bot-msg { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: white; align-self: flex-start; }
+        .user-msg { background: var(--neon-cyan); color: var(--bg-space); font-weight: 600; align-self: flex-end; box-shadow: 0 0 12px rgba(0,242,254,0.3); }
+
+        .poll-box { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); padding: 10px; border-radius: 8px; margin-top: 4px; width: 100%; }
+        .poll-question { font-weight: 600; font-size: 0.8rem; margin-bottom: 6px; color: var(--neon-cyan); }
+        .poll-options { display: flex; flex-direction: column; gap: 5px; }
+        .poll-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: white; padding: 5px 8px; border-radius: 6px; font-size: 0.75rem; text-align: left; cursor: pointer; transition: 0.3s; }
+        .poll-btn:hover { background: var(--neon-cyan); color: var(--bg-space); border-color: var(--neon-cyan); }
+
+        .chat-footer { padding: 12px 15px; background: rgba(8, 11, 22, 0.96); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+        .chat-input { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 9px 12px; border-radius: 10px; color: white; outline: none; font-size: 0.82rem; }
+        .send-btn { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700; }
+
+        .flying-spaceship {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2.2rem;
+            color: var(--neon-cyan);
+            z-index: 9999;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px var(--neon-cyan));
+            animation: flyToSpace 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes flyToSpace {
+            0% { transform: translate(0, 0) scale(0.6) rotate(0deg); opacity: 1; }
+            50% { transform: translate(-150px, -250px) scale(1.1) rotate(-25deg); opacity: 1; }
+            100% { transform: translate(-350px, -600px) scale(0.3) rotate(-45deg); opacity: 0; }
+        }
+
+        /* --- Saturn & Asteroids Footer Widget CSS --- */
+        .sun-footer-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .saturn-btn-wrap {
+          border: 0;
+          background: radial-gradient(ellipse at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 70%);
+          font-size: 15px;
+          height: 200px;
+          width: 300px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 20px;
+        }
+
+        .main {
+          width: 70px;
+          margin: auto;
+          position: relative;
+          transform: rotateZ(0deg);
+          isolation: isolate;
+          scale: 1;
+          transition: all 1.5s;
+        }
+
+        .main:hover {
+          transform: rotateZ(240deg);
+          scale: 2;
+          filter: drop-shadow(-1px -1px 5px #69e9d6);
+        }
+
+        .rings {
+          position: absolute;
+          width: 200px;
+          height: 100px;
+          border-radius: 150px 150px 0 0;
+          background: radial-gradient(circle at 50% 100%, transparent 30%, #69e9d6 40%, #404D44 50%, #44867c 60%, #404D44 70%, transparent);
+        }
+
+        #saturn {
+          width: 70px;
+          height: 70px;
+          border-radius: 50%;
+          background: linear-gradient(80deg, #69e9d6, #404D44, #000000);
+        }
+
+        #ring1 {
+          transform: rotateX(80deg);
+          top: -20px;
+          left: -65px;
+        }
+
+        #ring2 {
+          transform: rotateX(-100deg);
+          left: -65px;
+          z-index: -1;
+          top: -3px;
+        }
+
+        .asteriods-large {
+          position: absolute;
+          width: 8px;
+          height: 10px;
+          border-radius: 15px 8px;
+          background: linear-gradient(220deg, #6f7776, #598ea3, #311515);
+          transform: rotateZ(0deg);
+          transition: all 3s;
+        }
+
+        #asteriod1 { top: 8px; height: 12px; width: 12px; border-radius: 50%; }
+        #asteriod2 { top: 35px; height: 10px; left: -55px; }
+        #asteriod3 { top: 35px; height: 8px; left: 85px; }
+        #asteriod4 { top: 40px; height: 4px; width: 4px; left: -40px; }
+        #asteriod5 { top: 35px; height: 4px; width: 4px; left: 82px; }
+
+        .asteriods-small {
+          position: absolute;
+          width: 4px;
+          height: 3px;
+          border-radius: 15px 8px;
+          background: linear-gradient(80deg, #6f7776, #598ea3, #311515);
+          transform-origin: 50px 50px;
+          transform: rotateZ(0deg);
+          transition: all 3s;
+        }
+
+        #asteriod6 { top: 6px; left: -5px; border-radius: 50%; }
+        #asteriod7 { top: 15px; left: -35px; }
+        #asteriod8 { top: 35px; left: 65px; }
+        #asteriod9 { top: 60px; left: -10px; }
+        #asteriod10 { top: 15px; left: 112px; }
+
+        #explore {
+          position: absolute;
+          top: 32px;
+          font-size: 15px;
+          color: hsl(171, 59%, 74%);
+          left: 10px;
+          transition: all 3s;
+        }
+
+        .main:hover > .asteriods-large, .main:hover > .asteriods-small {
+          transform: translateX(28px);
+        }
+
+        .main:hover > #explore {
+          translate: -10px 20px;
+          transform: rotateZ(120deg);
+        }
+
+        .main:not(hover) > #explore {
+          translate: 0px;
+          transform: rotateZ(0deg);
+        }
+
+        .main:not(hover) > .asteriods-large, .main:not(hover) > .asteriods-small {
+          transform: translateX(0px);
+        }
+
+        .main:is(:active) > #explore {
+          translate: -100px 200px;
+        }
+
+        .main:is(:active) {
+          translate: -200px;
+        }
+
+        footer { text-align: center; padding: 25px; background: rgba(3, 0, 20, 0.9); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.82rem; margin-top: 20px; position: relative; z-index: 2; }
+
+        @media(max-width: 480px) {
+            .writer-hero { padding: 20px; gap: 15px; }
+            .writer-info h1 { font-size: 1.4rem; }
+            .articles-grid { grid-template-columns: 1fr; }
+            .chat-modal { width: 95%; right: 2.5%; bottom: 75px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Rocket Loading Screen -->
+    <div id="loader-overlay" class="active">
+        <div class="rocket-loading-wrapper">
+            <div class="moon-load">
+                <div class="crater-load crater-load1"></div>
+                <div class="crater-load crater-load2"></div>
+                <div class="crater-load crater-load3"></div>
+            </div>
+            <div class="orbit-load">
+                <div class="rocket-item">
+                    <div class="window-load"></div>
+                    <div class="fire"></div>
+                </div>
+            </div>
+            <div class="curve-load">
+                <svg viewBox="0 0 500 500" width="100%" height="100%">
+                    <path id="loading-path" fill="transparent" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"></path>
+                    <text><textPath href="#loading-path">...loading...</textPath></text>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="progress-container"><div id="progress-bar"></div></div>
+    
+    <!-- Floating Space Background & Comets -->
+    <div class="space-bg">
+        <div class="nebula-glow"></div>
+        <div class="nebula-glow-2"></div>
+        
+        <div class="box-of-star1"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
+        <div class="box-of-star2"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
+        <div class="box-of-star3"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
+        <div class="box-of-star4"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
+
+        <!-- Shooting Stars / Comets -->
+        <div class="shooting-star-container">
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+        </div>
+    </div>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo" id="siteLogoText"><i class="fa-solid fa-satellite"></i> Mahi<span>.Space</span></a>
+            <nav class="nav-menu">
+                <a href="index.html">Home</a>
+                <a href="#articles">Articles (<span id="totalPostCount">0</span>)</a>
+                <button class="btn-neon" onclick="triggerLoaderAndExecute(openJoinModal)"><i class="fa-solid fa-user-plus"></i> Join</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Full Width Hero Introduction Section -->
+        <section class="writer-hero">
+            <div class="writer-avatar" id="writerAvatarDiv"><i class="fa-solid fa-user-astronaut"></i></div>
+            <div class="writer-info">
+                <h1 id="writerNameTitle">Muktasin Mahi</h1>
+                <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and if you like them share with your friends, family and others. I shall keep writing blogs on various topics here so follow me and stay tuned.</p>
+                
+                <div style="margin-top: 15px;">
+                    <button class="btn-neon" onclick="triggerLoaderAndExecute(openAboutModal)"><i class="fa-solid fa-user-circle"></i> View Full Bio Details</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Me Popup Modal -->
+        <div class="about-modal" id="aboutModal">
+            <div class="about-modal-box">
+                <button class="close-about-modal" onclick="closeAboutModal()">&times;</button>
+                <h3 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); margin-bottom:12px; display:flex; align-items:center; gap:8px; font-size:1.1rem;">
+                    <i class="fa-solid fa-id-card"></i> About Me Details
+                </h3>
+                <div class="about-grid">
+                    <div class="about-item"><strong>Gender:</strong> Male</div>
+                    <div class="about-item"><strong>Industry:</strong> Education</div>
+                    <div class="about-item"><strong>Occupation:</strong> Student</div>
+                    <div class="about-item"><strong>Location:</strong> Bangladesh</div>
+                    <div class="about-item" style="grid-column: 1 / -1;"><strong>Interests:</strong> Space, Astrophysics, Reading Books</div>
+                    <div class="about-item" style="grid-column: 1 / -1;"><strong>Favorite Movies:</strong> Interstellar, The Dark Knight, Inglourious Basterds, 12 Angry Men, Inception</div>
+                    <div class="about-item" style="grid-column: 1 / -1;"><strong>Favorite Books:</strong> The Kite Runner, The Alchemist, Professor Shonku</div>
+                </div>
+            </div>
+        </div>
+
+        <section id="articles">
+            <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Live Space Publications</h2>
+            
+            <!-- Cosmic Showcase Box with 7 Planets Solar System -->
+            <div class="cosmic-showcase-box">
+                <div class="widgets-row-container">
+                    <div class="planet-widget-box">
+                        <div class="solar">
+                            <i class="mercury"></i>
+                            <i class="venus"></i>
+                            <i class="earth"></i>
+                            <i class="mars"></i>
+                            <i class="jupiter"></i>
+                            <i class="saturn"></i>
+                            <i class="uranus"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Articles Grid -->
+            <div class="articles-grid" id="articlesGridContainer">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+                    কোনো পোস্ট পাওয়া যায়নি। অ্যাডমিন প্যানেল থেকে পোস্ট করলে এখানে প্রদর্শিত হবে।
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Saturn & Asteroids Button Widget at the Bottom -->
+    <div class="sun-footer-container">
+        <button class="saturn-btn-wrap">
+          <div class="main">
+            <div class="rings" id="ring1"></div>
+            <div class="rings" id="ring2"></div>
+            <div class="asteriods-large" id="asteriod1"></div>
+            <div class="asteriods-large" id="asteriod2"></div>
+            <div class="asteriods-large" id="asteriod3"></div>
+            <div class="asteriods-large" id="asteriod4"></div>
+            <div class="asteriods-large" id="asteriod5"></div>
+            <div class="asteriods-small" id="asteriod6"></div>
+            <div class="asteriods-small" id="asteriod7"></div>
+            <div class="asteriods-small" id="asteriod8"></div>
+            <div class="asteriods-small" id="asteriod9"></div>
+            <div class="asteriods-small" id="asteriod10"></div>
+            <div id="saturn"></div>
+            <div id="explore"></div>
+          </div>
+        </button>
+    </div>
+
+    <!-- Join Member Modal -->
+    <div class="modal-overlay" id="joinMemberModal">
+        <div class="modal-box">
+            <button class="close-modal" onclick="closeJoinModal()">&times;</button>
+            <h3><i class="fa-solid fa-user-astronaut" style="color:var(--neon-cyan);"></i> Join Portal Community</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">আপনার ইমেইল দিয়ে আমাদের কমিউনিটির মেম্বার হয়ে যান!</p>
+            <input type="email" id="memberEmailInput" class="modal-input" placeholder="Enter your email...">
+            <button class="btn-neon" style="width: 100%; justify-content: center;" onclick="triggerLoaderAndExecute(registerMember)">Register</button>
+        </div>
+    </div>
+
+    <!-- Full Page Article Modal -->
+    <div class="full-article-modal" id="fullArticleModal">
+        <div class="full-article-content">
+            <button class="close-full-article" onclick="closeFullArticle()">&times;</button>
+            <span id="full-art-tag" class="card-tag" style="display:block; margin-bottom:8px;"></span>
+            <h1 id="full-art-title" style="font-family:'Orbitron',sans-serif; color:white; font-size:1.4rem; margin-bottom:12px;"></h1>
+            <p id="full-art-date" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;"></p>
+            
+            <div style="width:100%; max-height:420px; overflow:hidden; border-radius:10px; margin-bottom:15px; display:flex; justify-content:center; background:#010008; padding: 5px;">
+                <img id="full-art-img" src="" style="max-width:100%; max-height:400px; object-fit:contain;" alt="Full Image">
+            </div>
+
+            <div class="blog-gallery-grid" id="fullArtGalleryContainer"></div>
+            <div id="full-art-desc" style="color:var(--text-muted); line-height:1.7; font-size:0.95rem; margin-bottom:20px;"></div>
+
+            <div class="comment-section">
+                <h4 style="font-family:'Orbitron',sans-serif; font-size:0.95rem; color:white; margin-bottom:10px;"><i class="fa-solid fa-comments"></i> Reader Comments</h4>
+                <div class="comment-list" id="commentListContainer">
+                    <div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</div>
+                </div>
+                <div class="comment-input-box">
+                    <input type="text" id="commentInputText" class="comment-input" placeholder="আপনার কমেন্ট লিখুন...">
+                    <button class="btn-comment" onclick="triggerLoaderAndExecute(postComment)">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini Logo Chat Float Button -->
+    <button class="chat-float-btn" onclick="triggerLoaderAndExecute(toggleChat)" title="Talk to Writer"><i class="fa-solid fa-comment-dots"></i></button>
+
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            <h4>Talk to Writer(Muktasin Mahi)</h4>
+            <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-footer" id="chatFooterContainer"></div>
+    </div>
+
+    <footer><p>&copy; 2026 Kazim Nahian. All Cosmic Rights Reserved.</p></footer>
+
+    <script>
+        function triggerLoaderAndExecute(callback) {
+            const loader = document.getElementById('loader-overlay');
+            loader.classList.add('active');
+            const randomTime = Math.floor(Math.random() * 2000) + 1000;
+            setTimeout(() => {
+                loader.classList.remove('active');
+                if (typeof callback === 'function') { callback(); }
+            }, randomTime);
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader-overlay');
+                loader.classList.remove('active');
+            }, 2000);
+            initPortal();
+        });
+
+        const SUPABASE_URL = 'https://zpmptjenzhdjxoiuhfyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_U3Dj2qRx375nhMyLxuSsgw_7iFHyDeo';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById("progress-bar").style.width = (winScroll / height) * 100 + "%";
+        });
+
+        let articles = [];
+        let activeArticleId = null;
+        let chatUser = localStorage.getItem('chat_user_name') || null;
+        let chatEmail = localStorage.getItem('chat_user_email') || null;
+
+        async function initPortal() {
+            loadBrandingData();
+            await fetchArticles();
+        }
+
+        function loadBrandingData() {
+            const savedName = localStorage.getItem('admin_name');
+            const savedPic = localStorage.getItem('admin_pic');
+            if(savedName) document.getElementById('writerNameTitle').innerText = savedName;
+            if(savedPic) document.getElementById('writerAvatarDiv').innerHTML = `<img src="${savedPic}" alt="Admin">`;
+        }
+
+        function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
+        function closeAboutModal() { document.getElementById('aboutModal').style.display = 'none'; }
+        function openJoinModal() { document.getElementById('joinMemberModal').style.display = 'flex'; }
+        function closeJoinModal() { document.getElementById('joinMemberModal').style.display = 'none'; }
+
+        async function registerMember() {
+            const emailInput = document.getElementById('memberEmailInput');
+            const email = emailInput.value.trim();
+            if(!email || !email.includes('@')) { alert('সঠিক ইমেইল ঠিকানা দিন!'); return; }
+
+            const { error } = await _supabase.from('members').insert([{ email: email }]);
+            if(!error) {
+                triggerSpaceshipAnimation();
+                alert('অভিনন্দন! সফলভাবে মেম্বার হিসেবে যুক্ত হয়েছেন।');
+                emailInput.value = '';
+                closeJoinModal();
+            } else {
+                alert('এই ইমেইলটি ইতিপূর্বে রেজিস্টার্ড থাকতে পারে অথবা সমস্যা হয়েছে।');
+            }
+        }
+
+        async function fetchArticles() {
+            const { data } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
+            const gridContainer = document.getElementById('articlesGridContainer');
+            
+            if (data && data.length > 0) {
+                articles = data;
+                document.getElementById('totalPostCount').innerText = articles.length;
+                gridContainer.innerHTML = '';
+
+                articles.forEach(art => {
+                    const card = document.createElement('div');
+                    card.className = 'article-card';
+                    card.innerHTML = `
+                        <div class="card-img-container">
+                            <img src="${art.image_url || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80'}" alt="Article Banner" class="card-img">
+                        </div>
+                        <div class="card-details">
+                            <div class="card-meta-info">
+                                <span class="card-tag">${art.category || 'Cosmos'}</span>
+                                <span style="font-size:0.75rem; color:var(--text-muted);">${art.created_at ? art.created_at.split('T')[0] : 'Recent'}</span>
+                            </div>
+                            <h3 class="card-title">${art.title}</h3>
+                            <p class="card-desc">${art.description}</p>
+                            
+                            <div class="blog-actions">
+                                <button class="action-btn" onclick="triggerLoaderAndExecute(() => likeArticle('${art.id}'))"><i class="fa-solid fa-heart" style="color:#ef4444;"></i> <span id="likes_${art.id}">${art.likes_count || 0}</span></button>
+                                <button class="action-btn" onclick="triggerLoaderAndExecute(() => openFullArticle('${art.id}'))"><i class="fa-solid fa-book-open"></i> Read Full</button>
+                                <button class="action-btn" onclick="triggerLoaderAndExecute(() => shareArticle('${art.title}'))"><i class="fa-solid fa-share-nodes"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    gridContainer.appendChild(card);
+                });
+            } else {
+                articles = [];
+                document.getElementById('totalPostCount').innerText = '0';
+                gridContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        কোনো পোস্ট নেই (0 Blogs)। অ্যাডমিন প্যানেল থেকে পোস্ট করলে এখানে আলাদা আলাদা কার্ড আকারে দেখাবে।
+                    </div>
+                `;
+            }
+        }
+
+        async function likeArticle(id) {
+            const art = articles.find(a => a.id == id);
+            if(!art) return;
+            art.likes_count = (art.likes_count || 0) + 1;
+            document.getElementById(`likes_${id}`).innerText = art.likes_count;
+            await _supabase.from('articles').update({ likes_count: art.likes_count }).eq('id', id);
+        }
+
+        function openFullArticle(id) {
+            const art = articles.find(a => a.id == id);
+            if(!art) return;
+            activeArticleId = art.id;
+
+            document.getElementById('full-art-tag').innerText = art.category;
+            document.getElementById('full-art-title').innerText = art.title;
+            document.getElementById('full-art-date').innerText = `Published: ${art.created_at ? art.created_at.split('T')[0] : 'Recent'}`;
+            document.getElementById('full-art-img').src = art.image_url;
+            document.getElementById('full-art-desc').innerText = art.description;
+
+            const galleryContainer = document.getElementById('fullArtGalleryContainer');
+            galleryContainer.innerHTML = '';
+            if (art.gallery_images && Array.isArray(art.gallery_images) && art.gallery_images.length > 0) {
+                art.gallery_images.forEach(imgUrl => {
+                    const imgTag = document.createElement('img');
+                    imgTag.src = imgUrl;
+                    galleryContainer.appendChild(imgTag);
+                });
+            }
+
+            document.getElementById('fullArticleModal').style.display = 'block';
+            loadArticleComments(art.id);
+        }
+
+        function closeFullArticle() {
+            document.getElementById('fullArticleModal').style.display = 'none';
+        }
+
+        async function loadArticleComments(articleId) {
+            const container = document.getElementById('commentListContainer');
+            const { data } = await _supabase.from('chat_logs').select('*').eq('type', `Comment_${articleId}`).order('created_at', { ascending: true });
+            if(!data || data.length === 0) {
+                container.innerHTML = `<div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</div>`;
+                return;
+            }
+            container.innerHTML = '';
+            data.forEach(c => {
+                let div = document.createElement('div');
+                div.className = 'comment-item';
+                div.innerHTML = `${c.content}`;
+                container.appendChild(div);
+            });
+        }
+
+        async function postComment() {
+            if(!activeArticleId) return;
+            const input = document.getElementById('commentInputText');
+            const text = input.value.trim();
+            if(!text) return alert('কমেন্ট লিখুন');
+
+            const commenter = chatUser ? chatUser : 'Visitor';
+            await _supabase.from('chat_logs').insert([{
+                type: `Comment_${activeArticleId}`,
+                content: `<b>${commenter}:</b> ${text}`
+            }]);
+
+            triggerSpaceshipAnimation();
+            input.value = '';
+            loadArticleComments(activeArticleId);
+        }
+
+        function shareArticle(title) {
+            if (navigator.share) {
+                navigator.share({ title: title, url: window.location.href });
+            } else {
+                alert("Link copied to clipboard!");
+            }
+        }
+
+        let chatOpen = false;
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chatModal').style.display = chatOpen ? 'flex' : 'none';
+            if(chatOpen) checkChatAuth();
+        }
+
+        function checkChatAuth() {
+            const chatBody = document.getElementById('chatBody');
+            const footerContainer = document.getElementById('chatFooterContainer');
+
+            if (!chatUser || !chatEmail) {
+                chatBody.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:10px; justify-content:center; height:100%;">
+                        <h5 style="color:white; font-size:0.82rem; text-align:center;">আসসালামু আলাইকুম! চ্যাট করতে আপনার নাম ও ইমেইল দিন</h5>
+                        <input type="text" id="authName" class="chat-input" placeholder="আপনার নাম">
+                        <input type="email" id="authEmail" class="chat-input" placeholder="আপনার ইমেইল">
+                        <button class="btn-neon" style="width:100%; padding: 9px; justify-content:center;" onclick="triggerLoaderAndExecute(saveChatAuth)">Start Chat</button>
+                    </div>
+                `;
+                footerContainer.innerHTML = '';
+            } else {
+                loadActiveChatLogs();
+            }
+        }
+
+        function saveChatAuth() {
+            chatUser = document.getElementById('authName').value.trim();
+            chatEmail = document.getElementById('authEmail').value.trim();
+            if(!chatUser || !chatEmail) return alert('নাম ও ইমেইল দিন');
+            localStorage.setItem('chat_user_name', chatUser);
+            localStorage.setItem('chat_user_email', chatEmail);
+            loadActiveChatLogs();
+        }
+
+        async function loadActiveChatLogs() {
+            const chatBody = document.getElementById('chatBody');
+            const footerContainer = document.getElementById('chatFooterContainer');
+
+            chatBody.innerHTML = `<div class="message bot-msg">লোড হচ্ছে...</div>`;
+
+            const { data } = await _supabase.from('chat_logs').select('*').order('created_at', { ascending: true });
+
+            chatBody.innerHTML = `
+                <div class="message bot-msg">আসসালামু আলাইকুম ${chatUser}! পোর্টালটিতে আপনাকে স্বাগতম।</div>
+                <div class="message bot-msg">
+                    <div class="poll-question">📊 পোল ১: এই পোর্টালটি আপনার কেমন লাগলো?</div>
+                    <div class="poll-options">
+                        <button class="poll-btn" onclick="votePoll(1, 'অসাধারণ (Awesome)')">🚀 অসাধারণ (Awesome)</button>
+                        <button class="poll-btn" onclick="votePoll(1, 'ভালো (Good)')">✨ ভালো (Good)</button>
+                    </div>
+                </div>
+                <div class="message bot-msg">
+                    <div class="poll-question">🔬 পোল ২: বিজ্ঞানের কোন শাখাটি আপনার বেশি পছন্দ?</div>
+                    <div class="poll-options">
+                        <button class="poll-btn" onclick="votePoll(2, 'অ্যাস্ট্রোফিজিক্স ও মহাকাশ')">🌌 অ্যাস্ট্রোফিজিক্স ও মহাকাশ</button>
+                        <button class="poll-btn" onclick="votePoll(2, 'কোয়ান্টাম কম্পিউটিং ও এআই')">💻 কোয়ান্টাম কম্পিউটিং ও এআই</button>
+                    </div>
+                </div>
+            `;
+
+            if (data && data.length > 0) {
+                data.forEach(log => {
+                    if (log.type === 'Message' && log.content.includes(chatEmail)) {
+                        chatBody.innerHTML += `<div class="message user-msg">${log.content.split(']: ')[1] || log.content}</div>`;
+                    } else if (log.type === 'Admin Reply') {
+                        chatBody.innerHTML += `<div class="message bot-msg">${log.content}</div>`;
+                    }
+                });
+            }
+
+            footerContainer.innerHTML = `
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." onkeypress="handleKey(event)">
+                <button class="send-btn" onclick="triggerLoaderAndExecute(sendMessage)"><i class="fa-solid fa-paper-plane"></i></button>
+            `;
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function votePoll(pollNum, option) {
+            triggerLoaderAndExecute(async () => {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML += `<div class="message user-msg">পোল ${pollNum} ভোট দিয়েছেন: ${option}</div>`;
+                chatBody.innerHTML += `<div class="message bot-msg">ধন্যবাদ আপনার মতামতের জন্য!</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                triggerSpaceshipAnimation();
+                await _supabase.from('chat_logs').insert([{ type: `Poll ${pollNum}`, content: `${chatUser} (${chatEmail}): ${option}` }]);
+            });
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML += `<div class="message user-msg">${text}</div>`;
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            triggerSpaceshipAnimation();
+            await _supabase.from('chat_logs').insert([{ type: 'Message', content: `${chatUser} [${chatEmail}]: ${text}` }]);
+
+            setTimeout(() => {
+                chatBody.innerHTML += `<div class="message bot-msg">আপনার মেসেজটি অ্যাডমিনের কাছে পৌঁছেছে। অনুগ্রহ করে রিপ্লাইয়ের জন্য অপেক্ষা করুন।</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 800);
+        }
+
+        function triggerSpaceshipAnimation() {
+            const ship = document.createElement('div');
+            ship.className = 'flying-spaceship';
+            ship.innerHTML = '<i class="fa-solid fa-space-shuttle"></i>';
+            document.body.appendChild(ship);
+            setTimeout(() => { ship.remove(); }, 2500);
+        }
+
+        function handleKey(e) { if(e.key === 'Enter') triggerLoaderAndExecute(sendMessage); }
+    </script>
+</body>
+</html>
