@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Portal | কাজিম নাহইয়ান</title>
+    <title>Space Portal | Muktasin Mahi</title>
     <!-- ট্যাবের কর্নারে গোল পার্মানেন্ট পিকচার (ফেভিকন) সেট করা হলো -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg-space: #010008;
-            --surface: rgba(10, 15, 30, 0.85);
+            --surface: rgba(10, 15, 30, 0.9);
             --neon-cyan: #00f2fe;
             --neon-purple: #9d4edd;
             --text-main: #f8fafc;
@@ -32,7 +32,7 @@
         @keyframes floatNebula { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(120px, 90px) scale(1.25); } }
         @keyframes floatNebula2 { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-140px, -110px) scale(1.3); } }
 
-        /* Background Stars & Asteroids Effect (Increased density) */
+        /* Background Stars & Asteroids Effect */
         .box-of-star1, .box-of-star2, .box-of-star3, .box-of-star4 { width: 100%; position: absolute; z-index: -2; left: 0; top: 0; height: 1000px; pointer-events: none; opacity: 0.8; }
         .box-of-star1 { animation: snow 4s linear infinite; }
         .box-of-star2 { animation: snow 4s -1s linear infinite; }
@@ -51,7 +51,6 @@
         .star-position6 { top: 90px; left: 1280px; }
         .star-position7 { top: 30px; left: 1480px; }
 
-        /* Abundant Shooting Stars / Comets */
         .shooting-star-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1; }
         .shooting-star { position: absolute; width: 180px; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), transparent); transform: rotate(-45deg); animation: shoot 2.2s linear infinite; opacity: 0; }
         .shooting-star:nth-child(1) { top: 10%; left: 90%; animation-delay: 0.2s; }
@@ -167,6 +166,8 @@
             display: none;
             flex-direction: column;
             overflow: hidden;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
         .music-header {
             background: rgba(157, 78, 221, 0.1);
@@ -187,6 +188,8 @@
             flex-direction: column;
             gap: 8px;
             background: rgba(2, 1, 10, 0.85);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
         .music-item {
             background: rgba(255, 255, 255, 0.03);
@@ -202,6 +205,185 @@
         }
         .music-item:hover { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.05); }
         .music-item.active { border-color: var(--neon-purple); background: rgba(157, 78, 221, 0.15); font-weight: 600; }
+
+        /* EVA Robot & Cinematic Hologram Projection Overlay */
+        #robotPopupOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(1, 0, 8, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .robot-container-fly {
+            position: absolute;
+            opacity: 0;
+            transform: translate(-120vw, 80vh) scale(0.3) rotate(-30deg);
+            transition: transform 1.5s cubic-bezier(0.15, 0.85, 0.35, 1.2), opacity 1s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100000;
+        }
+        .robot-container-fly.fly-in {
+            opacity: 1;
+            transform: translate(0, 0) scale(1) rotate(0deg);
+        }
+        .robot-container-fly.fly-out {
+            transform: translate(-40vw, 40vh) scale(0.1) rotate(45deg);
+            opacity: 0;
+            transition: transform 1.2s cubic-bezier(0.6, -0.28, 0.735, 0.04), opacity 1s ease;
+        }
+
+        /* EVA Robot CSS Styles */
+        .modelViewPort {
+            perspective: 1000px;
+            width: 16rem;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+            overflow: visible;
+        }
+        .eva {
+            --EVA-ROTATION-DURATION: 4s;
+            transform-style: preserve-3d;
+            animation: rotateRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
+        }
+        .head {
+            position: relative;
+            width: 5rem;
+            height: 3.5rem;
+            border-radius: 48% 53% 45% 55% / 79% 79% 20% 22%;
+            background: linear-gradient(to right, white 45%, gray);
+            margin: 0 auto;
+        }
+        .eyeChamber {
+            width: 3.8rem;
+            height: 2.2rem;
+            position: relative;
+            left: 50%;
+            top: 55%;
+            border-radius: 45% 53% 45% 48% / 62% 59% 35% 34%;
+            background-color: #0c203c;
+            box-shadow: 0px 0px 2px 2px white, inset 0px 0px 0px 2px black;
+            transform: translate(-50%, -50%);
+            animation: moveRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
+        }
+        .eye {
+            width: 1rem;
+            height: 1.2rem;
+            position: absolute;
+            border-radius: 50%;
+        }
+        .eye:first-child {
+            left: 10px;
+            top: 50%;
+            background: repeating-linear-gradient(65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px);
+            box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb;
+            transform: translate(0, -50%) rotate(-65deg);
+        }
+        .eye:nth-child(2) {
+            right: 10px;
+            top: 50%;
+            background: repeating-linear-gradient(-65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px);
+            box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb;
+            transform: translate(0, -50%) rotate(65deg);
+        }
+        .body-robot {
+            width: 5rem;
+            height: 6.5rem;
+            position: relative;
+            margin-block-start: 0.25rem;
+            border-radius: 47% 53% 45% 55% / 12% 9% 90% 88%;
+            background: linear-gradient(to right, white 35%, gray);
+        }
+        .hand {
+            position: absolute;
+            left: -1.2rem;
+            top: 0.75rem;
+            width: 1.6rem;
+            height: 4.5rem;
+            border-radius: 40%;
+            background: linear-gradient(to left, white 15%, gray);
+            box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.25);
+            transform: rotateY(55deg) rotateZ(10deg);
+        }
+        .hand:first-child {
+            animation: compensateRotation var(--EVA-ROTATION-DURATION) linear infinite alternate;
+        }
+        .hand:nth-child(2) {
+            left: 88%;
+            background: linear-gradient(to right, white 15%, gray);
+            transform: rotateY(55deg) rotateZ(-10deg);
+            animation: compensateRotationRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
+        }
+        .scannerThing {
+            width: 0;
+            height: 0;
+            position: absolute;
+            left: 50%;
+            top: 30%;
+            border-top: 160px solid rgba(0, 242, 254, 0.55);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            transform-origin: top center;
+            filter: drop-shadow(0 0 12px #00f2fe);
+            animation: holographicBeam 2.5s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .scannerOrigin {
+            position: absolute;
+            width: 12px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            left: 50%;
+            top: 30%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            box-shadow: 0 0 20px #00f2fe, inset 0px 0px 5px #04b8d5;
+            z-index: 6;
+        }
+
+        @keyframes rotateRight { from { transform: rotateY(0deg); } to { transform: rotateY(25deg); } }
+        @keyframes moveRight { from { transform: translate(-50%, -50%); } to { transform: translate(-40%, -50%); } }
+        @keyframes compensateRotation { from { transform: rotateY(55deg) rotateZ(10deg); } to { transform: rotatey(30deg) rotateZ(10deg); } }
+        @keyframes compensateRotationRight { from { transform: rotateY(55deg) rotateZ(-10deg); } to { transform: rotateY(70deg) rotateZ(-10deg); } }
+        @keyframes holographicBeam {
+            0% { opacity: 0.4; filter: drop-shadow(0 0 8px #00f2fe); transform: translateX(-50%) scaleX(0.9); }
+            100% { opacity: 0.95; filter: drop-shadow(0 0 22px #00f2fe); transform: translateX(-50%) scaleX(1.1); }
+        }
+
+        /* Cinematic Projected Hologram Card */
+        .projected-popup-card {
+            background: rgba(4, 8, 20, 0.94);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 16px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.5), inset 0 0 20px rgba(0, 242, 254, 0.25);
+            text-align: center;
+            margin-top: -10px;
+            position: relative;
+            z-index: 100001;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .projected-popup-card.show-card {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .projected-popup-card h4 { font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 0.95rem; margin-bottom: 8px; text-shadow: 0 0 10px rgba(0,242,254,0.4); }
+        .projected-popup-card p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5; }
+        .popup-action-btns { display: flex; gap: 10px; justify-content: center; }
 
         .about-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 0, 8, 0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .about-modal-box { background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px 25px; width: 100%; max-width: 500px; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); position: relative; text-align: left; }
@@ -290,7 +472,7 @@
         .poll-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: white; padding: 5px 8px; border-radius: 6px; font-size: 0.75rem; text-align: left; cursor: pointer; transition: 0.3s; }
         .poll-btn:hover { background: var(--neon-cyan); color: var(--bg-space); border-color: var(--neon-cyan); }
 
-        .chat-footer { padding: 12px 15px; background: rgba(8, 11, 22, 0.96); border-top: 1px solid var(--border); display: flex; gap: 8px; }
+        .chat-footer { padding: 12px 15px; background: rgba(8, 11, 22, 0.96); border-top: 1px solid var(--border); display: flex; gap: 8px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
         .chat-input { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 9px 12px; border-radius: 10px; color: white; outline: none; font-size: 0.82rem; }
         .send-btn { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
@@ -467,8 +649,39 @@
     <!-- Background Audio Element -->
     <audio id="bgAudio" loop></audio>
 
+    <!-- EVA Robot & Cinematic Hologram Projection Overlay -->
+    <div id="robotPopupOverlay">
+        <div class="robot-container-fly" id="robotFlyWrapper">
+            <div class="modelViewPort">
+                <div class="eva">
+                    <div class="head">
+                        <div class="eyeChamber">
+                            <div class="eye"></div>
+                            <div class="eye"></div>
+                        </div>
+                    </div>
+                    <div class="body-robot">
+                        <div class="hand"></div>
+                        <div class="hand"></div>
+                        <div class="scannerThing"></div>
+                        <div class="scannerOrigin"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Projected Hologram Popup Card -->
+            <div class="projected-popup-card" id="projectedCardBox">
+                <h4><i class="fa-solid fa-robot"></i> EVA-01 Hologram Link</h4>
+                <p>আপনি কি ব্যাকগ্রাউন্ড মিউজিকের সাথে মহাকাশের এই ভ্রমণটি উপভোগ করতে চান?</p>
+                <div class="popup-action-btns">
+                    <button class="btn-neon" onclick="handleRobotMusicChoice(true)">Yes, Enjoy!</button>
+                    <button class="btn-neon" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border);" onclick="handleRobotMusicChoice(false)">No Thanks</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Music Widget Button -->
-    <button class="music-float-btn" onclick="toggleMusicModal()" title="Study & Sci-Fi Music Player"><i class="fa-solid fa-music"></i></button>
+    <button class="music-float-btn" id="musicFloatBtn" onclick="toggleMusicModal()" title="Study & Sci-Fi Music Player"><i class="fa-solid fa-music"></i></button>
 
     <div class="music-modal" id="musicModal">
         <div class="music-header">
@@ -497,7 +710,7 @@
                 <img src="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I" alt="Admin Profile">
             </div>
             <div class="writer-info">
-                <h1 id="writerNameTitle">কাজিম নাহইয়ান</h1>
+                <h1 id="writerNameTitle">Muktasin Mahi</h1>
                 <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and if you like them share with your friends, family and others. I shall keep writing blogs on various topics here so follow me and stay tuned.</p>
                 
                 <div style="margin-top: 15px;">
@@ -613,14 +826,14 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to কাজিম নাহইয়ান</h4>
+            <h4>Talk to Writer (Muktasin Mahi)</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
         <div class="chat-footer" id="chatFooterContainer"></div>
     </div>
 
-    <footer><p>&copy; 2026 কাজিম নাহইয়ান. All Cosmic Rights Reserved.</p></footer>
+    <footer><p>&copy; 2026 Kazim Nahian. All Cosmic Rights Reserved.</p></footer>
 
     <script>
         function triggerLoaderAndExecute(callback) {
@@ -639,6 +852,13 @@
                 loader.classList.remove('active');
             }, 2000);
             initPortal();
+
+            // সাইটে ঢোকার ঠিক ৪ সেকেন্ড পর ইভা রোবটটি চমৎকারভাবে উড়ে এসে হাজির হবে
+            setTimeout(() => {
+                if(!localStorage.getItem('eva_music_popup_shown')) {
+                    showRobotPopup();
+                }
+            }, 4000);
         });
 
         const SUPABASE_URL = 'https://zpmptjenzhdjxoiuhfyk.supabase.co';
@@ -656,6 +876,7 @@
         let chatUser = localStorage.getItem('chat_user_name') || null;
         let chatEmail = localStorage.getItem('chat_user_email') || null;
         let musicTracks = [];
+        let defaultLockedTrackUrl = '';
 
         async function initPortal() {
             await loadBrandingData();
@@ -676,43 +897,122 @@
         async function loadMusicPlaylist() {
             const { data } = await _supabase.from('music_tracks').select('*').order('created_at', { ascending: false });
             const container = document.getElementById('musicPlaylistContainer');
-            const audioElem = document.getElementById('bgAudio');
 
             if (data && data.length > 0) {
                 musicTracks = data;
                 container.innerHTML = '';
-                let lockedTrack = null;
+                let lockedTrack = musicTracks.find(t => t.is_locked) || musicTracks[0];
+                if (lockedTrack) {
+                    defaultLockedTrackUrl = lockedTrack.audio_url;
+                }
 
                 musicTracks.forEach(track => {
-                    if (track.is_locked) lockedTrack = track;
+                    const isCurrentLocked = track.is_locked;
                     const item = document.createElement('div');
-                    item.className = `music-item ${track.is_locked ? 'active' : ''}`;
+                    item.className = `music-item ${isCurrentLocked ? 'active' : ''}`;
                     item.id = `track_${track.id}`;
                     item.innerHTML = `
-                        <span><i class="fa-solid fa-compact-disc"></i> ${track.title}</span>
-                        <i class="fa-solid fa-play" style="color:var(--neon-cyan);"></i>
+                        <span><i class="fa-solid fa-compact-disc"></i> ${track.title} ${isCurrentLocked ? '<span style="color:var(--neon-cyan); font-size:0.7rem;">(Locked)</span>' : ''}</span>
+                        <i class="fa-solid fa-play play-pause-icon" style="color:var(--neon-cyan);"></i>
                     `;
-                    item.onclick = () => playSelectedMusic(track.id, track.audio_url);
+                    item.onclick = () => {
+                        togglePlayTrack(track.id, track.audio_url);
+                        alert('টিপস: আপনি চাইলে মিউজিক প্লেয়ারের লিস্ট থেকে যেকোনো সময় গান পরিবর্তন করতে পারেন!');
+                    };
                     container.appendChild(item);
                 });
-
-                if (lockedTrack && !audioElem.src) {
-                    audioElem.src = lockedTrack.audio_url;
-                    audioElem.play().catch(e => console.log("Autoplay restricted by browser."));
-                }
             } else {
                 container.innerHTML = `<div style="font-size:0.780rem; color:var(--text-muted); text-align:center; padding:10px;">কোনো মিউজিক নেই। অ্যাডমিন প্যানেল থেকে যোগ করুন।</div>`;
             }
         }
 
-        function playSelectedMusic(id, url) {
-            const audioElem = document.getElementById('bgAudio');
-            audioElem.src = url;
-            audioElem.play();
+        function showRobotPopup() {
+            const overlay = document.getElementById('robotPopupOverlay');
+            const robotFly = document.getElementById('robotFlyWrapper');
+            const popupCard = document.getElementById('projectedCardBox');
+
+            overlay.style.display = 'flex';
             
-            document.querySelectorAll('.music-item').forEach(el => el.classList.remove('active'));
-            const activeElem = document.getElementById(`track_${id}`);
-            if(activeElem) activeElem.classList.add('active');
+            // রোবট উড়ে আসার অ্যানিমেশন ট্রিগার
+            setTimeout(() => {
+                robotFly.classList.add('fly-in');
+            }, 50);
+
+            // রোবট সেন্টারে আসার পর বুক থেকে লেজার প্রজেকশন কার্ডটি ওপেন হবে
+            setTimeout(() => {
+                popupCard.classList.add('show-card');
+            }, 1200);
+        }
+
+        function handleRobotMusicChoice(yes) {
+            localStorage.setItem('eva_music_popup_shown', 'true');
+            const overlay = document.getElementById('robotPopupOverlay');
+            const robotFly = document.getElementById('robotFlyWrapper');
+            const popupCard = document.getElementById('projectedCardBox');
+
+            // কার্ডটি আগে হাইড হবে
+            popupCard.classList.remove('show-card');
+
+            if (yes && defaultLockedTrackUrl) {
+                // রোবটটি ফ্লোটিং মিউজিক বাটনের দিকে উড়ে চলে যাবে
+                setTimeout(() => {
+                    robotFly.classList.remove('fly-in');
+                    robotFly.classList.add('fly-out');
+                }, 300);
+
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    robotFly.classList.remove('fly-out');
+
+                    const audioElem = document.getElementById('bgAudio');
+                    audioElem.src = defaultLockedTrackUrl;
+                    audioElem.play().then(() => {
+                        musicTracks.forEach(t => {
+                            if(t.audio_url === defaultLockedTrackUrl) {
+                                const activeItem = document.getElementById(`track_${t.id}`);
+                                if(activeItem) {
+                                    document.querySelectorAll('.music-item').forEach(el => {
+                                        el.classList.remove('active');
+                                        el.querySelector('.play-pause-icon').className = "fa-solid fa-play play-pause-icon";
+                                    });
+                                    activeItem.classList.add('active');
+                                    activeItem.querySelector('.play-pause-icon').className = "fa-solid fa-pause play-pause-icon";
+                                }
+                            }
+                        });
+                        alert('নোট: গান বাজছে! আপনি চাইলে ফ্লোটিং মিউজিক বাটন থেকে যেকোনো সময় গান পরিবর্তন করে নিতে পারেন।');
+                    }).catch(e => console.log("Audio autoplay restricted."));
+                }, 1200);
+            } else {
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    robotFly.classList.remove('fly-in');
+                }, 500);
+            }
+        }
+
+        function togglePlayTrack(id, url) {
+            const audioElem = document.getElementById('bgAudio');
+            const clickedItem = document.getElementById(`track_${id}`);
+            const iconElem = clickedItem.querySelector('.play-pause-icon');
+
+            if (audioElem.src.includes(url) && !audioElem.paused) {
+                audioElem.pause();
+                iconElem.className = "fa-solid fa-play play-pause-icon";
+                clickedItem.classList.remove('active');
+            } else {
+                audioElem.src = url;
+                audioElem.play().then(() => {
+                    document.querySelectorAll('.music-item').forEach(el => {
+                        el.classList.remove('active');
+                        el.querySelector('.play-pause-icon').className = "fa-solid fa-play play-pause-icon";
+                    });
+                    clickedItem.classList.add('active');
+                    iconElem.className = "fa-solid fa-pause play-pause-icon";
+                }).catch(err => {
+                    alert('অডিও প্লে করতে ব্রাউজারে অনুমতি দিন!');
+                });
+            }
         }
 
         function openAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
@@ -902,19 +1202,12 @@
             const { data } = await _supabase.from('chat_logs').select('*').order('created_at', { ascending: true });
 
             chatBody.innerHTML = `
-                <div class="message bot-msg">আসসালামু আলাইকুম ${chatUser}! পোর্টালটিতে আপনাকে স্বাগতম।</div>
+                <div class="message bot-msg">At first, কেমন আছেন ${chatUser}? পোর্টালটিতে আপনাকে স্বাগতম।</div>
                 <div class="message bot-msg">
                     <div class="poll-question">📊 পোল ১: এই পোর্টালটি আপনার কেমন লাগলো?</div>
                     <div class="poll-options">
                         <button class="poll-btn" onclick="votePoll(1, 'অসাধারণ (Awesome)')">🚀 অসাধারণ (Awesome)</button>
                         <button class="poll-btn" onclick="votePoll(1, 'ভালো (Good)')">✨ ভালো (Good)</button>
-                    </div>
-                </div>
-                <div class="message bot-msg">
-                    <div class="poll-question">🔬 পোল ২: বিজ্ঞানের কোন শাখাটি আপনার বেশি পছন্দ?</div>
-                    <div class="poll-options">
-                        <button class="poll-btn" onclick="votePoll(2, 'অ্যাস্ট্রোফিজিক্স ও মহাকাশ')">🌌 অ্যাস্ট্রোফিজিক্স ও মহাকাশ</button>
-                        <button class="poll-btn" onclick="votePoll(2, 'কোয়ান্টাম কম্পিউটিং ও এআই')">💻 কোয়ান্টাম কম্পিউটিং ও এআই</button>
                     </div>
                 </div>
             `;
@@ -940,7 +1233,21 @@
             triggerLoaderAndExecute(async () => {
                 const chatBody = document.getElementById('chatBody');
                 chatBody.innerHTML += `<div class="message user-msg">পোল ${pollNum} ভোট দিয়েছেন: ${option}</div>`;
-                chatBody.innerHTML += `<div class="message bot-msg">ধন্যবাদ আপনার মতামতের জন্য!</div>`;
+                
+                if(pollNum === 1) {
+                    chatBody.innerHTML += `
+                        <div class="message bot-msg">দারুণ! এবার বলুন, বিজ্ঞানের কোন শাখাটি আপনার বেশি পছন্দ?</div>
+                        <div class="message bot-msg">
+                            <div class="poll-question">🔬 পোল ২: পছন্দের শাখা নির্বাচন করুন</div>
+                            <div class="poll-options">
+                                <button class="poll-btn" onclick="votePoll(2, 'অ্যাস্ট্রোফিজিক্স ও মহাকাশ')">🌌 অ্যাস্ট্রোফিজিক্স ও মহাকাশ</button>
+                                <button class="poll-btn" onclick="votePoll(2, 'কোয়ান্টাম কম্পিউটিং ও এআই')">💻 কোয়ান্টাম কম্পিউটিং ও এআই</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    chatBody.innerHTML += `<div class="message bot-msg">অনেক ধন্যবাদ আপনার মূল্যবান মতামতের জন্য! আপনার কোনো কিছু জানার থাকলে সরাসরি লিখে পাঠাতে পারেন।</div>`;
+                }
                 chatBody.scrollTop = chatBody.scrollHeight;
 
                 triggerSpaceshipAnimation();
@@ -962,7 +1269,7 @@
             await _supabase.from('chat_logs').insert([{ type: 'Message', content: `${chatUser} [${chatEmail}]: ${text}` }]);
 
             setTimeout(() => {
-                chatBody.innerHTML += `<div class="message bot-msg">আপনার মেসেজটি অ্যাডমিনের কাছে পৌঁছেছে। অনুগ্রহ করে রিপ্লাইয়ের জন্য অপেক্ষা করুন।</div>`;
+                chatBody.innerHTML += `<div class="message bot-msg">আপনার বার্তাটি আমি পেয়েছি। খুব শীঘ্রই ড্যাশবোর্ড থেকে উত্তর দেব ইনশাআল্লাহ!</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 800);
         }
