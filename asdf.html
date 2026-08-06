@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Control Center | Space Portal</title>
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -40,10 +40,14 @@
         .btn-neon { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white; padding: 12px 20px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer; box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); transition: 0.3s; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Orbitron', sans-serif; }
         .btn-neon:hover { box-shadow: 0 0 25px var(--neon-cyan); transform: translateY(-2px); }
 
-        .video-list-box { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; max-height: 350px; overflow-y: auto; }
-        .video-item-row { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+        .video-list-box { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; max-height: 400px; overflow-y: auto; }
+        .video-item-row { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
         .video-info h4 { font-size: 0.95rem; color: white; font-family: 'Orbitron', sans-serif; margin-bottom: 4px; }
-        .video-info span { font-size: 0.75rem; color: var(--neon-cyan); background: rgba(0,242,254,0.1); padding: 2px 8px; border-radius: 6px; }
+        .video-info span { font-size: 0.75rem; color: var(--neon-cyan); background: rgba(0,242,254,0.1); padding: 2px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; }
+        
+        .action-btns-group { display: flex; gap: 8px; }
+        .edit-btn { background: rgba(0, 242, 254, 0.15); border: 1px solid var(--neon-cyan); color: var(--neon-cyan); padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; font-family: 'Orbitron', sans-serif; }
+        .edit-btn:hover { background: var(--neon-cyan); color: var(--bg-space); }
         .del-btn { background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 0.8rem; }
         .del-btn:hover { background: #ef4444; color: white; }
     </style>
@@ -56,38 +60,44 @@
             <h1 style="font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: white;">🎬 Video Control Center (Admin 2)</h1>
         </div>
 
-        <!-- 1. Add Video & Playlist Control -->
+        <input type="hidden" id="editingVideoId" value="">
+
+        <!-- 1. Add / Edit Video Control Card -->
         <div class="admin-card">
-            <h2><i class="fa-solid fa-circle-plus"></i> Add Video to Playlist</h2>
+            <h2 id="formHeading"><i class="fa-solid fa-circle-plus"></i> Add Video to Playlist</h2>
             <div class="form-group">
                 <label>Video Title / Name</label>
                 <input type="text" id="vidTitle" placeholder="যেমন: Quantum Mechanics Breakdown">
             </div>
             <div class="form-group">
-                <label>Direct Video URL (Supabase/Catbox/Cloudinary)</label>
+                <label>Direct Video URL</label>
                 <input type="text" id="vidUrl" placeholder="https://...">
             </div>
             <div class="form-group">
-                <label>Video Category Type (Dropdown)</label>
+                <label>Video Category Type</label>
                 <select id="vidCategory">
                     <option value="featured">Featured Science Broadcast</option>
                     <option value="ad">Advertisement (Ad)</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Target Lock / Priority Order (1 মানে সবার আগে)</label>
+                <label>Priority Order (ক্রম)</label>
                 <input type="number" id="vidPriority" value="1" placeholder="1">
+            </div>
+            <div class="form-group">
+                <label>Duration in Seconds (কত সেকেন্ড চলবে)</label>
+                <input type="number" id="vidDuration" value="15" placeholder="15">
             </div>
             <div class="form-group checkbox-group">
                 <input type="checkbox" id="vidMuted" checked>
                 <label for="vidMuted">Mute Video on Autoplay (সাউন্ড মিউট রাখুন)</label>
             </div>
-            <button class="btn-neon" onclick="addNewVideo()"><i class="fa-solid fa-upload"></i> Save Video to Database</button>
+            <button class="btn-neon" id="saveBtn" onclick="saveOrUpdateVideo()"><i class="fa-solid fa-upload"></i> Save Video to Database</button>
         </div>
 
         <!-- 2. Active Playlist Manager -->
         <div class="admin-card">
-            <h2><i class="fa-solid fa-list-check"></i> Active Video Playlist</h2>
+            <h2><i class="fa-solid fa-list-check"></i> Active Video Playlist & Editor</h2>
             <div class="video-list-box" id="videoPlaylistContainer">
                 <div style="color: var(--text-muted); text-align: center; font-size: 0.85rem;">লোড হচ্ছে...</div>
             </div>
@@ -99,15 +109,19 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_U3Dj2qRx375nhMyLxuSsgw_7iFHyDeo';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let allVideosCache = [];
+
         window.addEventListener('load', () => {
             fetchVideoPlaylist();
         });
 
-        async function addNewVideo() {
+        async function saveOrUpdateVideo() {
+            const editId = document.getElementById('editingVideoId').value;
             const title = document.getElementById('vidTitle').value.trim();
             const url = document.getElementById('vidUrl').value.trim();
             const category = document.getElementById('vidCategory').value;
             const priority = parseInt(document.getElementById('vidPriority').value) || 1;
+            const duration = parseInt(document.getElementById('vidDuration').value) || 15;
             const isMuted = document.getElementById('vidMuted').checked;
 
             if(!title || !url) {
@@ -115,21 +129,33 @@
                 return;
             }
 
-            const { error } = await _supabase.from('site_videos').insert([{
+            const videoPayload = {
                 title: title,
                 video_url: url,
                 category: category,
                 priority: priority,
+                duration: duration,
                 is_muted: isMuted
-            }]);
+            };
 
-            if(!error) {
-                alert('সফলভাবে ভিডিও যুক্ত হয়েছে!');
-                document.getElementById('vidTitle').value = '';
-                document.getElementById('vidUrl').value = '';
-                fetchVideoPlaylist();
+            if (editId) {
+                const { error } = await _supabase.from('site_videos').update(videoPayload).eq('id', editId);
+                if (!error) {
+                    alert('ভিডিও সফলভাবে আপডেট করা হয়েছে!');
+                    resetForm();
+                    fetchVideoPlaylist();
+                } else {
+                    alert('আপডেট করতে সমস্যা হয়েছে।');
+                }
             } else {
-                alert('সমস্যা হয়েছে: টেবিলটি Supabase-এ তৈরি করা আছে কি না চেক করুন।');
+                const { error } = await _supabase.from('site_videos').insert([videoPayload]);
+                if (!error) {
+                    alert('সফলভাবে নতুন ভিডিও যুক্ত হয়েছে!');
+                    resetForm();
+                    fetchVideoPlaylist();
+                } else {
+                    alert('সেভ করতে সমস্যা হয়েছে।');
+                }
             }
         }
 
@@ -138,22 +164,56 @@
             const { data, error } = await _supabase.from('site_videos').select('*').order('priority', { ascending: true });
 
             if(data && data.length > 0) {
+                allVideosCache = data;
                 container.innerHTML = '';
                 data.forEach(v => {
                     let muteStatus = v.is_muted ? 'Muted' : 'Unmuted';
+                    let dur = v.duration || 15;
                     container.innerHTML += `
                         <div class="video-item-row">
                             <div class="video-info">
                                 <h4>${v.title}</h4>
-                                <span>${v.category.toUpperCase()} | Priority: ${v.priority} | Sound: ${muteStatus}</span>
+                                <span>${v.category.toUpperCase()} | Priority: ${v.priority} | Duration: ${dur}s | Sound: ${muteStatus}</span>
                             </div>
-                            <button class="del-btn" onclick="deleteVideo('${v.id}')"><i class="fa-solid fa-trash"></i></button>
+                            <div class="action-btns-group">
+                                <button class="edit-btn" onclick="loadVideoForEdit('${v.id}')"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                                <button class="del-btn" onclick="deleteVideo('${v.id}')"><i class="fa-solid fa-trash"></i></button>
+                            </div>
                         </div>
                     `;
                 });
             } else {
+                allVideosCache = [];
                 container.innerHTML = `<div style="color: var(--text-muted); text-align: center; font-size: 0.85rem;">কোনো ভিডিও নেই।</div>`;
             }
+        }
+
+        function loadVideoForEdit(id) {
+            const v = allVideosCache.find(item => item.id == id);
+            if(!v) return;
+
+            document.getElementById('editingVideoId').value = v.id;
+            document.getElementById('vidTitle').value = v.title;
+            document.getElementById('vidUrl').value = v.video_url;
+            document.getElementById('vidCategory').value = v.category;
+            document.getElementById('vidPriority').value = v.priority;
+            document.getElementById('vidDuration').value = v.duration || 15;
+            document.getElementById('vidMuted').checked = v.is_muted !== undefined ? v.is_muted : true;
+
+            document.getElementById('formHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Video Details`;
+            document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Video Data`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editingVideoId').value = '';
+            document.getElementById('vidTitle').value = '';
+            document.getElementById('vidUrl').value = '';
+            document.getElementById('vidPriority').value = '1';
+            document.getElementById('vidDuration').value = '15';
+            document.getElementById('vidMuted').checked = true;
+            document.getElementById('formHeading').innerHTML = `<i class="fa-solid fa-circle-plus"></i> Add Video to Playlist`;
+            document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-upload"></i> Save Video to Database`;
         }
 
         async function deleteVideo(id) {
