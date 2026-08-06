@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Portal | \Muktasin Mahi</title>
+    <title>Space Portal | Muktasin Mahi</title>
     <!-- ট্যাবের কর্নারে গোল পার্মানেন্ট পিকচার (ফেভিকন) সেট করা হলো -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -103,8 +103,23 @@
         .writer-info h1 { font-family: 'Orbitron', sans-serif; font-size: 1.7rem; color: white; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         .writer-info p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin: 0 auto; max-width: 800px; }
 
-        /* Video Showcase Screen (Updated Style & Frame) */
-        .video-showcase-screen { background: var(--surface); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 20px; padding: 20px; box-shadow: 0 0 40px rgba(0,242,254,0.15), inset 0 0 20px rgba(0,242,254,0.05); }
+        /* Video Showcase Screen (Badge Outside Video) */
+        .video-showcase-screen { background: var(--surface); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 20px; padding: 20px; box-shadow: 0 0 40px rgba(0,242,254,0.15), inset 0 0 20px rgba(0,242,254,0.05); display: flex; flex-direction: column; gap: 12px; }
+        
+        #videoCategoryBadge { 
+            align-self: flex-start;
+            background: rgba(4, 8, 20, 0.9); 
+            border: 1px solid var(--neon-cyan); 
+            color: var(--neon-cyan); 
+            padding: 6px 16px; 
+            border-radius: 30px; 
+            font-size: 0.82rem; 
+            font-family: 'Orbitron', sans-serif; 
+            display: none; 
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+            letter-spacing: 0.5px;
+        }
+
         .video-container { width: 100%; aspect-ratio: 16/9; max-height: 420px; background: #000; border-radius: 14px; overflow: hidden; position: relative; border: 1px solid var(--border); box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
         .video-container iframe, .video-container video { width: 100%; height: 100%; object-fit: cover; border: none; pointer-events: none; }
 
@@ -637,10 +652,12 @@
             </div>
         </div>
 
-        <!-- 2. Admin Controlled Video Screen (No controls, smooth playback, audio enabled/muted support) -->
+        <!-- 2. Admin Controlled Video Screen (Badge placed OUTSIDE the video container) -->
         <section class="video-showcase-screen" id="adminVideoSection" style="display:none;">
-            <h2 class="section-title"><i class="fa-solid fa-video"></i> Featured Science Broadcast</h2>
-            <div class="video-container" id="videoFrameContainer"></div>
+            <div id="videoCategoryBadge"></div>
+            <div class="video-container" id="videoFrameContainer">
+                <video id="portalVideoPlayer" autoplay playsinline></video>
+            </div>
         </section>
 
         <!-- 3. Live Space Publications (Articles) -->
@@ -651,7 +668,7 @@
             </div>
         </section>
 
-        <!-- 4. Science Comics Section (Google Drive Link Support) -->
+        <!-- 4. Science Comics Section -->
         <section id="comics">
             <h2 class="section-title"><i class="fa-solid fa-mask"></i> Science Comics</h2>
             <div class="comics-grid" id="comicsGridContainer">
@@ -682,7 +699,7 @@
         </button>
     </div>
 
-    <!-- Modals for Full Article, Comics, Join & Chat -->
+    <!-- Modals -->
     <div class="full-comic-modal" id="fullComicModal">
         <div class="full-comic-content">
             <button class="close-full-comic" onclick="closeComicReader()">&times;</button>
@@ -731,7 +748,7 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to writer (Muktasin Mahi)</h4>
+            <h4>Talk to Writer Muktasin Mahi</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
@@ -739,7 +756,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 <span>Kazim Nahian</span> | মোবাইল: 09638183029 | KNWeb</p>
+        <p>&copy; 2026 <span>Kazim Nahian</span> | Mob: 09638183029 | KNWeb</p>
         <p>All Cosmic Rights Reserved.</p>
     </footer>
 
@@ -754,7 +771,9 @@
         }
 
         window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('loader-overlay').classList.remove('active'); }, 1500);
+            setTimeout(() => { 
+                document.getElementById('loader-overlay').classList.remove('active'); 
+            }, 2000);
             initPortal();
             setTimeout(() => { showRobotPopup(); }, 4000);
         });
@@ -777,12 +796,21 @@
         let musicTracks = [];
         let defaultLockedTrackUrl = '';
 
+        let videoPlaylist = [];
+        let currentVideoIndex = 0;
+
         async function initPortal() {
-            await loadBrandingData();
-            await fetchArticles();
-            await fetchComics();
-            await loadMusicPlaylist();
-            await loadAdminVideoScreen();
+            try {
+                await loadBrandingData();
+                await fetchArticles();
+                await fetchComics();
+                await loadMusicPlaylist();
+                await loadAdminVideoScreen();
+            } catch (err) {
+                console.log("Portal Init Error:", err);
+            } finally {
+                document.getElementById('loader-overlay').classList.remove('active');
+            }
         }
 
         async function loadBrandingData() {
@@ -791,25 +819,48 @@
         }
 
         async function loadAdminVideoScreen() {
-            const { data } = await _supabase.from('site_settings').select('*').eq('key', 'featured_video').single();
-            if (data && data.value) {
-                const sec = document.getElementById('adminVideoSection');
-                const container = document.getElementById('videoFrameContainer');
-                sec.style.display = 'block';
+            try {
+                const { data } = await _supabase
+                    .from('site_videos')
+                    .select('*')
+                    .order('priority', { ascending: true });
 
-                let vidUrl = data.value;
-                let isMuted = data.is_muted ? true : false;
-
-                if (vidUrl.includes('youtube.com') || vidUrl.includes('youtu.be')) {
-                    let videoId = vidUrl.includes('youtu.be') ? vidUrl.split('/').pop() : new URL(vidUrl).searchParams.get('v');
-                    let ytMute = isMuted ? '&mute=1' : '&mute=0';
-                    container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1${ytMute}" allow="autoplay"></iframe>`;
-                } else {
-                    // Direct video with no controls, background animation style
-                    let muteAttr = isMuted ? 'muted' : '';
-                    container.innerHTML = `<video src="${vidUrl}" autoplay loop ${muteAttr} playsinline></video>`;
+                if (data && data.length > 0) {
+                    videoPlaylist = data;
+                    currentVideoIndex = 0;
+                    document.getElementById('adminVideoSection').style.display = 'flex';
+                    playCurrentPlaylistVideo();
                 }
+            } catch(e) {
+                console.log("Video Load Error:", e);
             }
+        }
+
+        function playCurrentPlaylistVideo() {
+            const videoElement = document.getElementById('portalVideoPlayer');
+            const badgeElement = document.getElementById('videoCategoryBadge');
+            
+            if (!videoElement || videoPlaylist.length === 0) return;
+
+            const currentVid = videoPlaylist[currentVideoIndex];
+
+            videoElement.src = currentVid.video_url;
+            videoElement.muted = currentVid.is_muted !== undefined ? currentVid.is_muted : true;
+            videoElement.load();
+            
+            if (badgeElement) {
+                badgeElement.style.display = 'block';
+                badgeElement.innerText = `${currentVid.category.toUpperCase()}: ${currentVid.title}`;
+            }
+
+            videoElement.play().catch(e => {
+                console.log("অটো-প্লে ব্রাউজার দ্বারা ব্লক করা হয়েছে:", e);
+            });
+
+            videoElement.onended = () => {
+                currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
+                playCurrentPlaylistVideo();
+            };
         }
 
         function convertDriveLink(url) {
