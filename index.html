@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Portal | Muktasin Mahi</title>
-    <!-- ট্যাবের কর্নারে গোল পার্মানেন্ট পিকচার (ফেভিকন) সেট করা হলো -->
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
+    <!-- ট্যাবের কর্নারে পার্মানেন্ট লোগো (ফেভিকন) -->
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,16 +48,12 @@
         .star-position3 { top: 60px; left: 570px; }
         .star-position4 { top: 120px; left: 900px; }
         .star-position5 { top: 20px; left: 1120px; }
-        .star-position6 { top: 90px; left: 1280px; }
-        .star-position7 { top: 30px; left: 1480px; }
 
         .shooting-star-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 1; }
         .shooting-star { position: absolute; width: 180px; height: 2px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), transparent); transform: rotate(-45deg); animation: shoot 2.2s linear infinite; opacity: 0; }
         .shooting-star:nth-child(1) { top: 10%; left: 90%; animation-delay: 0.2s; }
         .shooting-star:nth-child(2) { top: 30%; left: 75%; animation-delay: 0.9s; }
         .shooting-star:nth-child(3) { top: 5%; left: 50%; animation-delay: 1.5s; }
-        .shooting-star:nth-child(4) { top: 45%; left: 95%; animation-delay: 2.1s; }
-        .shooting-star:nth-child(5) { top: 20%; left: 40%; animation-delay: 2.8s; }
         @keyframes shoot { 0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; } 100% { transform: translateX(-900px) translateY(900px) rotate(-45deg); opacity: 0; } }
 
         #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #010008; z-index: 99999; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.4s ease; }
@@ -84,8 +80,9 @@
 
         header { background: rgba(3, 0, 20, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); position: sticky; top: 4px; z-index: 100; }
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.15rem; font-weight: 700; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; }
         .logo span { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan); }
+        .logo img { height: 35px; width: auto; object-fit: contain; }
         .nav-menu { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .nav-menu a { text-decoration: none; color: var(--text-muted); font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
         .nav-menu a:hover { color: var(--neon-cyan); }
@@ -103,7 +100,7 @@
         .writer-info h1 { font-family: 'Orbitron', sans-serif; font-size: 1.7rem; color: white; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         .writer-info p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin: 0 auto; max-width: 800px; }
 
-        /* Video Showcase Screen (Badge Outside Video) */
+        /* Video Showcase Screen */
         .video-showcase-screen { background: var(--surface); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 20px; padding: 20px; box-shadow: 0 0 40px rgba(0,242,254,0.15), inset 0 0 20px rgba(0,242,254,0.05); display: flex; flex-direction: column; gap: 12px; }
         
         #videoCategoryBadge { 
@@ -151,256 +148,66 @@
 
         /* Music Floating Button & Player UI */
         .music-float-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
+            position: fixed; bottom: 20px; left: 20px;
             background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
-            color: white;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            box-shadow: 0 0 25px rgba(157, 78, 221, 0.5);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            z-index: 999;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: 0.3s ease;
+            color: white; width: 48px; height: 48px; border-radius: 50%;
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.5); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; z-index: 999; border: 2px solid rgba(255,255,255,0.3); transition: 0.3s ease;
         }
         .music-float-btn:hover { transform: scale(1.15) rotate(-10deg); box-shadow: 0 0 35px var(--neon-purple); }
 
         .music-modal {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            width: 90%;
-            max-width: 320px;
-            background: rgba(8, 11, 22, 0.96);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--neon-purple);
-            border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(157, 78, 221, 0.3);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            position: fixed; bottom: 80px; left: 20px; width: 90%; max-width: 320px;
+            background: rgba(8, 11, 22, 0.96); backdrop-filter: blur(25px);
+            border: 1px solid var(--neon-purple); border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(157, 78, 221, 0.3); z-index: 1000;
+            display: none; flex-direction: column; overflow: hidden;
         }
-        .music-header {
-            background: rgba(157, 78, 221, 0.1);
-            border-bottom: 1px solid var(--border);
-            color: white;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.85rem;
-        }
-        .music-body {
-            padding: 15px;
-            max-height: 250px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            background: rgba(2, 1, 10, 0.85);
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-        .music-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 8px 12px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .music-header { background: rgba(157, 78, 221, 0.1); border-bottom: 1px solid var(--border); color: white; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; }
+        .music-body { padding: 15px; max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; background: rgba(2, 1, 10, 0.85); }
+        .music-item { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 8px 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; cursor: pointer; transition: 0.3s; }
         .music-item:hover { border-color: var(--neon-cyan); background: rgba(0, 242, 254, 0.05); }
         .music-item.active { border-color: var(--neon-purple); background: rgba(157, 78, 221, 0.15); font-weight: 600; }
 
         /* EVA Robot & Cinematic Hologram Projection Overlay */
         #robotPopupOverlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(1, 0, 8, 0.88);
-            backdrop-filter: blur(18px);
-            z-index: 99999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(1, 0, 8, 0.88); backdrop-filter: blur(18px); z-index: 99999;
+            display: none; justify-content: center; align-items: center; overflow: hidden;
         }
 
         .robot-container-fly {
-            position: absolute;
-            opacity: 0;
+            position: absolute; opacity: 0;
             transform: translate(-140vw, 90vh) scale(0.2) rotate(-45deg);
             transition: transform 1.8s cubic-bezier(0.1, 0.9, 0.2, 1.1), opacity 1.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 100000;
+            display: flex; flex-direction: column; align-items: center; z-index: 100000;
         }
-        .robot-container-fly.fly-in {
-            opacity: 1;
-            transform: translate(0, 0) scale(1) rotate(0deg);
-        }
-        .robot-container-fly.fly-out {
-            transform: translate(-45vw, 45vh) scale(0.08) rotate(50deg);
-            opacity: 0;
-            transition: transform 1.2s cubic-bezier(0.6, -0.3, 0.8, 0.1), opacity 1s ease;
-        }
+        .robot-container-fly.fly-in { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+        .robot-container-fly.fly-out { transform: translate(-45vw, 45vh) scale(0.08) rotate(50deg); opacity: 0; transition: transform 1.2s cubic-bezier(0.6, -0.3, 0.8, 0.1), opacity 1s ease; }
 
-        /* EVA Robot CSS Styles */
-        .modelViewPort {
-            perspective: 1000px;
-            width: 16rem;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: transparent;
-            overflow: visible;
-        }
-        .eva {
-            --EVA-ROTATION-DURATION: 4s;
-            transform-style: preserve-3d;
-            animation: rotateRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
-        }
-        .head {
-            position: relative;
-            width: 5rem;
-            height: 3.5rem;
-            border-radius: 48% 53% 45% 55% / 79% 79% 20% 22%;
-            background: linear-gradient(to right, white 45%, gray);
-            margin: 0 auto;
-        }
-        .eyeChamber {
-            width: 3.8rem;
-            height: 2.2rem;
-            position: relative;
-            left: 50%;
-            top: 55%;
-            border-radius: 45% 53% 45% 48% / 62% 59% 35% 34%;
-            background-color: #0c203c;
-            box-shadow: 0px 0px 2px 2px white, inset 0px 0px 0px 2px black;
-            transform: translate(-50%, -50%);
-            animation: moveRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
-        }
-        .eye {
-            width: 1rem;
-            height: 1.2rem;
-            position: absolute;
-            border-radius: 50%;
-        }
-        .eye:first-child {
-            left: 10px;
-            top: 50%;
-            background: repeating-linear-gradient(65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px);
-            box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb;
-            transform: translate(0, -50%) rotate(-65deg);
-        }
-        .eye:nth-child(2) {
-            right: 10px;
-            top: 50%;
-            background: repeating-linear-gradient(-65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px);
-            box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb;
-            transform: translate(0, -50%) rotate(65deg);
-        }
-        .body-robot {
-            width: 5rem;
-            height: 6.5rem;
-            position: relative;
-            margin-block-start: 0.25rem;
-            border-radius: 47% 53% 45% 55% / 12% 9% 90% 88%;
-            background: linear-gradient(to right, white 35%, gray);
-        }
-        .hand {
-            position: absolute;
-            left: -1.2rem;
-            top: 0.75rem;
-            width: 1.6rem;
-            height: 4.5rem;
-            border-radius: 40%;
-            background: linear-gradient(to left, white 15%, gray);
-            box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.25);
-            transform: rotateY(55deg) rotateZ(10deg);
-        }
-        .hand:first-child {
-            animation: compensateRotation var(--EVA-ROTATION-DURATION) linear infinite alternate;
-        }
-        .hand:nth-child(2) {
-            left: 88%;
-            background: linear-gradient(to right, white 15%, gray);
-            transform: rotateY(55deg) rotateZ(-10deg);
-            animation: compensateRotationRight var(--EVA-ROTATION-DURATION) linear infinite alternate;
-        }
-        .scannerThing {
-            width: 0;
-            height: 0;
-            position: absolute;
-            left: 50%;
-            top: 30%;
-            border-top: 170px solid rgba(0, 242, 254, 0.65);
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            transform-origin: top center;
-            filter: drop-shadow(0 0 15px #00f2fe);
-            animation: holographicBeam 2s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 5;
-        }
-        .scannerOrigin {
-            position: absolute;
-            width: 12px;
-            aspect-ratio: 1;
-            border-radius: 50%;
-            left: 50%;
-            top: 30%;
-            transform: translateX(-50%);
-            background: #ffffff;
-            box-shadow: 0 0 22px #00f2fe, inset 0px 0px 6px #04b8d5;
-            z-index: 6;
-        }
+        .modelViewPort { perspective: 1000px; width: 16rem; aspect-ratio: 1; border-radius: 50%; display: flex; justify-content: center; align-items: center; background: transparent; overflow: visible; }
+        .eva { --EVA-ROTATION-DURATION: 4s; transform-style: preserve-3d; animation: rotateRight var(--EVA-ROTATION-DURATION) linear infinite alternate; }
+        .head { position: relative; width: 5rem; height: 3.5rem; border-radius: 48% 53% 45% 55% / 79% 79% 20% 22%; background: linear-gradient(to right, white 45%, gray); margin: 0 auto; }
+        .eyeChamber { width: 3.8rem; height: 2.2rem; position: relative; left: 50%; top: 55%; border-radius: 45% 53% 45% 48% / 62% 59% 35% 34%; background-color: #0c203c; box-shadow: 0px 0px 2px 2px white, inset 0px 0px 0px 2px black; transform: translate(-50%, -50%); animation: moveRight var(--EVA-ROTATION-DURATION) linear infinite alternate; }
+        .eye { width: 1rem; height: 1.2rem; position: absolute; border-radius: 50%; }
+        .eye:first-child { left: 10px; top: 50%; background: repeating-linear-gradient(65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px); box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb; transform: translate(0, -50%) rotate(-65deg); }
+        .eye:nth-child(2) { right: 10px; top: 50%; background: repeating-linear-gradient(-65deg, #9bdaeb 0px, #9bdaeb 1px, white 2px); box-shadow: inset 0px 0px 5px #04b8d5, 0px 0px 15px 1px #0bdaeb; transform: translate(0, -50%) rotate(65deg); }
+        .body-robot { width: 5rem; height: 6.5rem; position: relative; margin-block-start: 0.25rem; border-radius: 47% 53% 45% 55% / 12% 9% 90% 88%; background: linear-gradient(to right, white 35%, gray); }
+        .hand { position: absolute; left: -1.2rem; top: 0.75rem; width: 1.6rem; height: 4.5rem; border-radius: 40%; background: linear-gradient(to left, white 15%, gray); box-shadow: 5px 0px 5px rgba(0, 0, 0, 0.25); transform: rotateY(55deg) rotateZ(10deg); }
+        .hand:first-child { animation: compensateRotation var(--EVA-ROTATION-DURATION) linear infinite alternate; }
+        .hand:nth-child(2) { left: 88%; background: linear-gradient(to right, white 15%, gray); transform: rotateY(55deg) rotateZ(-10deg); animation: compensateRotationRight var(--EVA-ROTATION-DURATION) linear infinite alternate; }
+        .scannerThing { width: 0; height: 0; position: absolute; left: 50%; top: 30%; border-top: 170px solid rgba(0, 242, 254, 0.65); border-left: 150px solid transparent; border-right: 150px solid transparent; transform-origin: top center; filter: drop-shadow(0 0 15px #00f2fe); animation: holographicBeam 2s ease-in-out infinite alternate; pointer-events: none; z-index: 5; }
+        .scannerOrigin { position: absolute; width: 12px; aspect-ratio: 1; border-radius: 50%; left: 50%; top: 30%; transform: translateX(-50%); background: #ffffff; box-shadow: 0 0 22px #00f2fe, inset 0px 0px 6px #04b8d5; z-index: 6; }
 
         @keyframes rotateRight { from { transform: rotateY(0deg); } to { transform: rotateY(25deg); } }
         @keyframes moveRight { from { transform: translate(-50%, -50%); } to { transform: translate(-40%, -50%); } }
         @keyframes compensateRotation { from { transform: rotateY(55deg) rotateZ(10deg); } to { transform: rotatey(30deg) rotateZ(10deg); } }
         @keyframes compensateRotationRight { from { transform: rotateY(55deg) rotateZ(-10deg); } to { transform: rotateY(70deg) rotateZ(-10deg); } }
-        @keyframes holographicBeam {
-            0% { opacity: 0.5; filter: drop-shadow(0 0 10px #00f2fe); transform: translateX(-50%) scaleX(0.85); }
-            100% { opacity: 1; filter: drop-shadow(0 0 25px #00f2fe); transform: translateX(-50%) scaleX(1.15); }
-        }
+        @keyframes holographicBeam { 0% { opacity: 0.5; filter: drop-shadow(0 0 10px #00f2fe); transform: translateX(-50%) scaleX(0.85); } 100% { opacity: 1; filter: drop-shadow(0 0 25px #00f2fe); transform: translateX(-50%) scaleX(1.15); } }
 
-        /* Cinematic Projected Hologram Card */
-        .projected-popup-card {
-            background: rgba(4, 8, 20, 0.95);
-            border: 2px solid var(--neon-cyan);
-            border-radius: 16px;
-            padding: 22px;
-            width: 310px;
-            box-shadow: 0 0 45px rgba(0, 242, 254, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.3);
-            text-align: center;
-            margin-top: -12px;
-            position: relative;
-            z-index: 100001;
-            opacity: 0;
-            transform: scale(0.4);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.3);
-        }
-        .projected-popup-card.show-card {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .projected-popup-card { background: rgba(4, 8, 20, 0.95); border: 2px solid var(--neon-cyan); border-radius: 16px; padding: 22px; width: 310px; box-shadow: 0 0 45px rgba(0, 242, 254, 0.6), inset 0 0 20px rgba(0, 242, 254, 0.3); text-align: center; margin-top: -12px; position: relative; z-index: 100001; opacity: 0; transform: scale(0.4); transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.3); }
+        .projected-popup-card.show-card { opacity: 1; transform: scale(1); }
         .projected-popup-card h4 { font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 0.98rem; margin-bottom: 8px; text-shadow: 0 0 12px rgba(0,242,254,0.5); }
         .projected-popup-card p { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
         .popup-action-btns { display: flex; gap: 10px; justify-content: center; }
@@ -409,7 +216,6 @@
         .about-modal-box { background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px 25px; width: 100%; max-width: 500px; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); position: relative; text-align: left; }
         .close-about-modal { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
         .close-about-modal:hover { color: var(--neon-cyan); }
-        
         .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 15px; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
         .about-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; }
         .about-item strong { color: var(--neon-cyan); display: block; margin-bottom: 3px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
@@ -420,11 +226,8 @@
         .articles-grid, .comics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .article-card, .comic-card { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: var(--glow); display: flex; flex-direction: column; justify-content: space-between; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .article-card:hover, .comic-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 10px 35px rgba(0, 242, 254, 0.3); }
-        
         .card-img-container { position: relative; width: 100%; height: 260px; background: #010008; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; background: #010008; transition: 0.6s ease; }
-        .article-card:hover .card-img, .comic-card:hover .card-img { transform: scale(1.03); }
-        
         .card-details { padding: 20px; }
         .card-meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .card-tag { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--neon-cyan); }
@@ -452,7 +255,6 @@
         .comment-item { background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; }
         .comment-input-box { display: flex; gap: 8px; flex-wrap: wrap; }
         .comment-input { flex: 1; min-width: 200px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; font-size: 0.85rem; outline: none; }
-        .comment-input:focus { border-color: var(--neon-cyan); }
         .btn-comment { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
@@ -461,14 +263,7 @@
         .modal-input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: white; font-size: 0.9rem; outline: none; margin-bottom: 15px; }
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
 
-        .chat-float-btn { 
-            position: fixed; bottom: 20px; right: 20px; 
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); 
-            color: white; width: 48px; height: 48px; border-radius: 50%; 
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; 
-            z-index: 999; border: 2px solid rgba(255,255,255,0.3); transition: 0.3s ease; 
-        }
+        .chat-float-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); color: white; width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; z-index: 999; border: 2px solid rgba(255,255,255,0.3); transition: 0.3s ease; }
         .chat-float-btn:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 0 35px var(--neon-cyan); }
 
         .chat-modal { position: fixed; bottom: 80px; right: 20px; width: 90%; max-width: 360px; background: rgba(8, 11, 22, 0.96); backdrop-filter: blur(25px); border: 1px solid var(--neon-cyan); border-radius: 20px; box-shadow: 0 15px 50px rgba(0, 242, 254, 0.3); z-index: 1000; display: none; flex-direction: column; overflow: hidden; }
@@ -488,15 +283,8 @@
         .chat-input { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); padding: 9px 12px; border-radius: 10px; color: white; outline: none; font-size: 0.82rem; }
         .send-btn { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
-        .flying-spaceship {
-            position: fixed; bottom: 20px; right: 20px; font-size: 2.2rem; color: var(--neon-cyan); z-index: 9999; pointer-events: none;
-            filter: drop-shadow(0 0 10px var(--neon-cyan)); animation: flyToSpace 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        @keyframes flyToSpace {
-            0% { transform: translate(0, 0) scale(0.6) rotate(0deg); opacity: 1; }
-            50% { transform: translate(-150px, -250px) scale(1.1) rotate(-25deg); opacity: 1; }
-            100% { transform: translate(-350px, -600px) scale(0.3) rotate(-45deg); opacity: 0; }
-        }
+        .flying-spaceship { position: fixed; bottom: 20px; right: 20px; font-size: 2.2rem; color: var(--neon-cyan); z-index: 9999; pointer-events: none; filter: drop-shadow(0 0 10px var(--neon-cyan)); animation: flyToSpace 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes flyToSpace { 0% { transform: translate(0, 0) scale(0.6) rotate(0deg); opacity: 1; } 50% { transform: translate(-150px, -250px) scale(1.1) rotate(-25deg); opacity: 1; } 100% { transform: translate(-350px, -600px) scale(0.3) rotate(-45deg); opacity: 0; } }
 
         .sun-footer-container { display: flex; justify-content: center; align-items: center; padding: 50px 0; position: relative; z-index: 2; }
         .saturn-btn-wrap { border: 0; background: radial-gradient(ellipse at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 70%); font-size: 15px; height: 200px; width: 300px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 20px; }
@@ -602,7 +390,10 @@
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo"><i class="fa-solid fa-satellite"></i> Mahi<span>.Space</span></a>
+            <a href="index.html" class="logo">
+                <img src="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm" alt="Logo"> 
+                Mahi<span>.Space</span>
+            </a>
             <nav class="nav-menu">
                 <a href="index.html">Home</a>
                 <a href="#articles">Articles (<span id="totalPostCount">0</span>)</a>
@@ -615,7 +406,7 @@
     <div class="main-container">
         <section class="writer-hero">
             <div class="writer-avatar">
-                <img src="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I" alt="Admin Profile">
+                <img src="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm" alt="Admin Profile">
             </div>
             <div class="writer-info">
                 <h1 id="writerNameTitle">Muktasin Mahi</h1>
@@ -652,7 +443,7 @@
             </div>
         </div>
 
-        <!-- 2. Admin Controlled Video Screen (Badge placed OUTSIDE the video container) -->
+        <!-- 2. Admin Controlled Video Screen (Category & Title Badge on TOP of Video) -->
         <section class="video-showcase-screen" id="adminVideoSection" style="display:none;">
             <div id="videoCategoryBadge"></div>
             <div class="video-container" id="videoFrameContainer">
@@ -699,7 +490,7 @@
         </button>
     </div>
 
-    <!-- Modals -->
+    <!-- Modals for Full Article, Comics, Join & Chat -->
     <div class="full-comic-modal" id="fullComicModal">
         <div class="full-comic-content">
             <button class="close-full-comic" onclick="closeComicReader()">&times;</button>
@@ -748,7 +539,7 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to Writer Muktasin Mahi</h4>
+            <h4>Talk to Writter Muktasin Mahi</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
@@ -798,6 +589,7 @@
 
         let videoPlaylist = [];
         let currentVideoIndex = 0;
+        let videoTimer = null;
 
         async function initPortal() {
             try {
@@ -842,6 +634,8 @@
             
             if (!videoElement || videoPlaylist.length === 0) return;
 
+            if (videoTimer) clearTimeout(videoTimer);
+
             const currentVid = videoPlaylist[currentVideoIndex];
 
             videoElement.src = currentVid.video_url;
@@ -857,10 +651,21 @@
                 console.log("অটো-প্লে ব্রাউজার দ্বারা ব্লক করা হয়েছে:", e);
             });
 
+            let durationSec = (currentVid.duration || 15) * 1000;
+
+            videoTimer = setTimeout(() => {
+                nextVideoInPlaylist();
+            }, durationSec);
+
             videoElement.onended = () => {
-                currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
-                playCurrentPlaylistVideo();
+                nextVideoInPlaylist();
             };
+        }
+
+        function nextVideoInPlaylist() {
+            if (videoTimer) clearTimeout(videoTimer);
+            currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
+            playCurrentPlaylistVideo();
         }
 
         function convertDriveLink(url) {
