@@ -127,6 +127,52 @@
             </div>
         </div>
 
+        <!-- Featured Video Screen Setup (NEW) -->
+        <div class="card-box">
+            <h3><i class="fa-solid fa-video"></i> Featured Science Broadcast (Video Screen Setup)</h3>
+            <div class="admin-form-group">
+                <label>YouTube Video Link / Direct Video URL</label>
+                <input type="text" id="featuredVideoUrlInput" class="admin-input" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            <div class="admin-form-group" style="display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+                <input type="checkbox" id="videoMuteCheckbox" style="width: 18px; height: 18px; accent-color: var(--neon-cyan);">
+                <label for="videoMuteCheckbox" style="color: white; cursor: pointer; margin-bottom: 0;">Mute Video on Autoplay</label>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 10px 25px;" onclick="saveFeaturedVideoSetting()"><i class="fa-solid fa-cloud-arrow-up"></i> Save Video Screen</button>
+        </div>
+
+        <!-- Science Comics Cloud Manager (NEW) -->
+        <div class="card-box">
+            <h3><i class="fa-solid fa-mask"></i> Science Comics Cloud Manager</h3>
+            <div class="admin-form-group">
+                <label>Comic Title</label>
+                <input type="text" id="comicTitleInput" class="admin-input" placeholder="কমিকসের নাম...">
+            </div>
+            <div class="admin-form-group">
+                <label>Comic Poster Image Link / Google Drive Link</label>
+                <input type="text" id="comicPosterInput" class="admin-input" placeholder="পোস্টার ইমেজ লিংক...">
+            </div>
+            <div class="admin-form-group">
+                <label>Comic Pages Links (Google Drive বা ইমেজ লিংকগুলো কমা দিয়ে আলাদা করুন)</label>
+                <textarea id="comicPagesInput" class="admin-input" rows="3" placeholder="https://..., https://..."></textarea>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 10px 25px;" onclick="uploadComicBook()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic</button>
+
+            <div style="overflow-x: auto; margin-top: 15px;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminComicTableBody">
+                        <tr><td colspan="2" style="text-align:center;">Loading comics...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Study & Sci-Fi Music Cloud Manager -->
         <div class="card-box">
             <h3><i class="fa-solid fa-music"></i> Study & Sci-Fi Music Cloud Manager</h3>
@@ -257,30 +303,18 @@
             loadAdminInbox();
             loadMemberList();
             loadAdminMusicList();
+            loadAdminComicList();
+            loadExistingVideoSetting();
             const savedName = localStorage.getItem('admin_name');
             if(savedName) document.getElementById('profileName').value = savedName;
         }
 
-        // ফাইলের নাম থেকে বাংলা, স্পেস এবং জটিল চিহ্ন পরিষ্কার করে সেফ নাম তৈরি করার ফাংশন
         async function uploadFileToBucket(fileObj) {
             if (!fileObj) return null;
-            
-            // ফাইলের এক্সটেনশন আলাদা করা (যেমন: .mp3 বা .jpg)
-            const fileExt = fileObj.name.split('.').pop();
-            // নাম থেকে স্পেস, বাংলা ও অন্যান্য স্পেশাল ক্যারেক্টার বাদ দিয়ে শুধু ইংরেজি ও সংখ্যা রাখা
-            const safeName = fileObj.name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 20);
-            const fileName = `${Date.now()}_${safeName}.${fileExt}`;
-
-            const { data, error } = await _supabase.storage
-                .from('profile-pics')
-                .upload(fileName, fileObj, {
-                    cacheControl: '3600',
-                    upsert: true
-                });
-
+            const fileName = `${Date.now()}_${fileObj.name}`;
+            const { data, error } = await _supabase.storage.from('profile-pics').upload(fileName, fileObj);
             if (error) {
-                console.error("Storage Error:", error);
-                alert('ফাইল আপলোড ব্যর্থ হয়েছে! মেইন ত্রুটি: ' + error.message);
+                alert('ফাইল আপলোড ব্যর্থ হয়েছে!');
                 return null;
             }
             const { data: publicURLData } = _supabase.storage.from('profile-pics').getPublicUrl(fileName);
@@ -305,6 +339,83 @@
                 if(logoUrl) localStorage.setItem('site_logo', logoUrl);
             }
             alert('ব্র্যান্ডিং ও প্রোফাইল সফলভাবে আপডেট হয়েছে!');
+        }
+
+        async function saveFeaturedVideoSetting() {
+            const videoUrl = document.getElementById('featuredVideoUrlInput').value.trim();
+            const isMuted = document.getElementById('videoMuteCheckbox').checked;
+
+            if(!videoUrl) { alert('ভিডিও লিংক দিন!'); return; }
+
+            const { error } = await _supabase.from('site_settings').upsert({
+                key: 'featured_video',
+                value: videoUrl,
+                is_muted: isMuted
+            }, { onConflict: 'key' });
+
+            if(!error) {
+                alert('ফিচার্ড ভিডিও সফলভাবে সেভ হয়েছে!');
+            } else {
+                alert('ভিডিও সেভ করতে সমস্যা হয়েছে।');
+            }
+        }
+
+        async function loadExistingVideoSetting() {
+            const { data } = await _supabase.from('site_settings').select('*').eq('key', 'featured_video').single();
+            if(data) {
+                document.getElementById('featuredVideoUrlInput').value = data.value || '';
+                document.getElementById('videoMuteCheckbox').checked = data.is_muted ? true : false;
+            }
+        }
+
+        async function uploadComicBook() {
+            const title = document.getElementById('comicTitleInput').value.trim();
+            const poster = document.getElementById('comicPosterInput').value.trim();
+            const pages = document.getElementById('comicPagesInput').value.trim();
+
+            if(!title || !poster) { alert('কমিকসের নাম ও পোস্টার লিংক দিন!'); return; }
+
+            const { error } = await _supabase.from('comics').insert([{
+                title: title,
+                poster_image: poster,
+                description: 'Sci-Fi Comic Series',
+                pages_links: pages
+            }]);
+
+            if(!error) {
+                alert('কমিক সফলভাবে পাবলিশ হয়েছে!');
+                document.getElementById('comicTitleInput').value = '';
+                document.getElementById('comicPosterInput').value = '';
+                document.getElementById('comicPagesInput').value = '';
+                loadAdminComicList();
+            } else {
+                alert('কমিক আপলোড করতে সমস্যা হয়েছে।');
+            }
+        }
+
+        async function loadAdminComicList() {
+            const tbody = document.getElementById('adminComicTableBody');
+            const { data } = await _supabase.from('comics').select('*').order('created_at', { ascending: false });
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;">কোনো কমিকস নেই।</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            data.forEach(c => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${c.title}</b></td>
+                        <td><button class="btn-neon" style="background:#ef4444; padding:4px 10px; font-size:0.75rem; width:auto;" onclick="deleteComic('${c.id}')">Delete</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function deleteComic(id) {
+            if(!confirm('কমিকটি ডিলিট করতে চান?')) return;
+            await _supabase.from('comics').delete().eq('id', id);
+            alert('কমিক ডিলিট করা হয়েছে!');
+            loadAdminComicList();
         }
 
         async function publishContentDirect() {
