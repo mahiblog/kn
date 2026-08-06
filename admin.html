@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard |Muktasin Mahi</title>
+    <title>Admin Dashboard | কাজিম নাহইয়ান</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -29,7 +29,7 @@
         .btn-neon { background: linear-gradient(135deg, var(--neon-cyan), #2563eb); color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; width: 100%; border: none; cursor: pointer; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); transition: 0.3s; }
         .btn-neon:hover { box-shadow: 0 0 25px var(--neon-cyan); transform: translateY(-2px); }
 
-        .dashboard-container { display: none; width: 100%; max-width: 1000px; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 35px; box-shadow: var(--glow); margin: 20px 0; }
+        .dashboard-container { display: none; width: 100%; max-width: 1100px; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 35px; box-shadow: var(--glow); margin: 20px 0; }
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         .dash-header h2 { font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); font-size: 1.4rem; }
         
@@ -56,6 +56,7 @@
 
     <div class="space-bg"></div>
 
+    <!-- Login Screen -->
     <div class="login-box" id="loginScreen">
         <h2><i class="fa-solid fa-lock" style="color: var(--neon-cyan);"></i> Admin Login</h2>
         <input type="text" id="adminUser" class="admin-input" placeholder="Admin ID">
@@ -65,9 +66,10 @@
         <a href="index.html" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Back to Portal</a>
     </div>
 
+    <!-- Dashboard Screen -->
     <div class="dashboard-container" id="dashboardScreen">
         <div class="dash-header">
-            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel</h2>
+            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel - কাজিম নাহইয়ান</h2>
             <div>
                 <a href="index.html" class="btn-neon" style="padding: 8px 15px; font-size: 0.8rem; text-decoration: none; display: inline-block; margin-right: 10px;" target="_blank">View Site</a>
                 <button class="btn-neon" style="background: #ef4444; width: auto; padding: 8px 15px; font-size: 0.8rem;" onclick="logoutAdmin()">Logout</button>
@@ -80,7 +82,7 @@
                 <h3><i class="fa-solid fa-user-gear"></i> Profile & Logo Setup</h3>
                 <div class="admin-form-group">
                     <label>Admin Name</label>
-                    <input type="text" id="profileName" class="admin-input" value="Muktasin Mahi">
+                    <input type="text" id="profileName" class="admin-input" value="কাজিম নাহইয়ান">
                 </div>
                 <div class="admin-form-group">
                     <label>Upload Profile Picture</label>
@@ -93,14 +95,16 @@
                 <button class="btn-neon" onclick="saveBrandingAssets()">Save Branding</button>
             </div>
 
-            <!-- 2. Blog / Vlog Publish -->
+            <!-- 2. Blog / Vlog Publish & Edit -->
             <div class="card-box" style="margin-bottom:0;">
-                <h3><i class="fa-solid fa-pen-nib"></i> Publish Content</h3>
+                <h3 id="blogFormHeading"><i class="fa-solid fa-pen-nib"></i> Publish Content</h3>
+                <input type="hidden" id="editingArticleId" value="">
                 <div class="admin-form-group">
                     <label>Content Type</label>
                     <select id="contentType" class="admin-input">
                         <option value="Blog">Blog (Article)</option>
                         <option value="Vlog">Vlog (Video)</option>
+                        <option value="Research">Research Paper / MKHF Theory</option>
                     </select>
                 </div>
                 <div class="admin-form-group">
@@ -109,25 +113,25 @@
                 </div>
                 <div class="admin-form-group">
                     <label>Category / Tag</label>
-                    <input type="text" id="newTag" class="admin-input" placeholder="e.g. Astrophysics">
+                    <input type="text" id="newTag" class="admin-input" placeholder="e.g. Astrophysics, Robotics, Mathematics">
                 </div>
                 <div class="admin-form-group">
-                    <label>Media File (Image/Video)</label>
-                    <input type="file" id="mediaFile" class="admin-input" accept="image/*,video/*">
+                    <label>Media File / Image Link</label>
+                    <input type="file" id="mediaFile" class="admin-input" accept="image/*,video/*,.pdf">
                 </div>
                 <div class="admin-form-group">
                     <label>Custom Publish Date & Time</label>
                     <input type="datetime-local" id="customDate" class="admin-input">
                 </div>
                 <div class="admin-form-group">
-                    <label>Description</label>
-                    <textarea id="newDesc" class="admin-input" rows="2" placeholder="Description..."></textarea>
+                    <label>Description / Full Content</label>
+                    <textarea id="newDesc" class="admin-input" rows="3" placeholder="Description or summary..."></textarea>
                 </div>
-                <button class="btn-neon" onclick="publishContentDirect()">Publish to Cloud</button>
+                <button class="btn-neon" id="saveArticleBtn" onclick="publishContentDirect()">Publish to Cloud</button>
             </div>
         </div>
 
-        <!-- Featured Video Screen Setup (NEW) -->
+        <!-- Featured Video Screen Setup -->
         <div class="card-box">
             <h3><i class="fa-solid fa-video"></i> Featured Science Broadcast (Video Screen Setup)</h3>
             <div class="admin-form-group">
@@ -141,9 +145,10 @@
             <button class="btn-neon" style="width: auto; padding: 10px 25px;" onclick="saveFeaturedVideoSetting()"><i class="fa-solid fa-cloud-arrow-up"></i> Save Video Screen</button>
         </div>
 
-        <!-- Science Comics Cloud Manager (NEW) -->
+        <!-- Science Comics Cloud Manager (with Top/Bottom Desc & QR Code) -->
         <div class="card-box">
-            <h3><i class="fa-solid fa-mask"></i> Science Comics Cloud Manager</h3>
+            <h3 id="comicFormHeading"><i class="fa-solid fa-mask"></i> Science Comics Cloud Manager</h3>
+            <input type="hidden" id="editingComicId" value="">
             <div class="admin-form-group">
                 <label>Comic Title</label>
                 <input type="text" id="comicTitleInput" class="admin-input" placeholder="কমিকসের নাম...">
@@ -153,10 +158,26 @@
                 <input type="text" id="comicPosterInput" class="admin-input" placeholder="পোস্টার ইমেজ লিংক...">
             </div>
             <div class="admin-form-group">
-                <label>Comic Pages Links (Google Drive বা ইমেজ লিংকগুলো কমা দিয়ে আলাদা করুন)</label>
+                <label>Comic Pages Links (Google Drive বা ইমেজ লিংকগুলো কমা দিয়ে আলাদা করুন)</label>
                 <textarea id="comicPagesInput" class="admin-input" rows="3" placeholder="https://..., https://..."></textarea>
             </div>
-            <button class="btn-neon" style="width: auto; padding: 10px 25px;" onclick="uploadComicBook()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic</button>
+            <div class="admin-form-group">
+                <label>Main Description</label>
+                <textarea id="comicDescInput" class="admin-input" rows="2" placeholder="কমিকসের মূল বিবরণ..."></textarea>
+            </div>
+            <div class="admin-form-group">
+                <label>Top Description Box (অপশনাল - শুরুতে দেখাবে)</label>
+                <textarea id="comicTopDescInput" class="admin-input" rows="2" placeholder="শুরুতে দেখানোর অতিরিক্ত তথ্য..."></textarea>
+            </div>
+            <div class="admin-form-group">
+                <label>Bottom Description Box (অপশনাল - শেষে দেখাবে)</label>
+                <textarea id="comicBottomDescInput" class="admin-input" rows="2" placeholder="শেষে দেখানোর অতিরিক্ত তথ্য..."></textarea>
+            </div>
+            <div class="admin-form-group">
+                <label>QR Code Image URL (অপশনাল - একেবারে শেষে দেখাবে)</label>
+                <input type="text" id="comicQrInput" class="admin-input" placeholder="https://...">
+            </div>
+            <button class="btn-neon" id="saveComicBtn" style="width: auto; padding: 10px 25px;" onclick="uploadComicBook()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic</button>
 
             <div style="overflow-x: auto; margin-top: 15px;">
                 <table class="admin-table">
@@ -208,9 +229,55 @@
             </div>
         </div>
 
-        <!-- 3. Manage & Delete Published Blogs/Vlogs -->
+        <!-- AI Assistant Knowledge / Prompt Override Manager -->
         <div class="card-box">
-            <h3><i class="fa-solid fa-list-check"></i> Manage Blogs & Vlogs (Delete Posts)</h3>
+            <h3><i class="fa-solid fa-robot"></i> AI Assistant Knowledge & Custom Prompt Manager</h3>
+            <div class="admin-form-group">
+                <label>Custom System Prompt / Bio / Instructions for AI Portal Assistant</label>
+                <textarea id="aiSystemPromptInput" class="admin-input" rows="4" placeholder="অ্যাসিস্ট্যান্ট কীভাবে কথা বলবে বা কোন তথ্যগুলো জানবে তা এখানে লিখুন..."></textarea>
+            </div>
+            <div class="admin-form-group">
+                <label>Add FAQ / Quick Knowledge Base (Question & Answer)</label>
+                <input type="text" id="faqQuestionInput" class="admin-input" placeholder="প্রশ্ন (যেমন: কাজিম নাহইয়ান কে?)">
+                <input type="text" id="faqAnswerInput" class="admin-input" placeholder="উত্তর (যেমন: সে ঝিকরগাছা, যশোরের একজন টেন্থ গ্রেডের সায়েন্সের ছাত্র...)">
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 10px 25px; margin-bottom: 15px;" onclick="saveAiKnowledgeBase()"><i class="fa-solid fa-floppy-disk"></i> Save AI Knowledge Base</button>
+
+            <div style="overflow-x: auto;">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Question</th>
+                            <th>Answer</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminFaqTableBody">
+                        <tr><td colspan="3" style="text-align:center;">Loading FAQ items...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Site Analytics & Visitor Stats -->
+        <div class="card-box">
+            <h3><i class="fa-solid fa-chart-line"></i> Portal Analytics & Visitor Overview</h3>
+            <div class="grid-section" style="margin-bottom: 15px;">
+                <div style="background: rgba(0, 242, 254, 0.05); border: 1px solid var(--neon-cyan); padding: 20px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px;">Total Registered Members</h4>
+                    <span id="statTotalMembers" style="font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: var(--neon-cyan);">0</span>
+                </div>
+                <div style="background: rgba(121, 40, 202, 0.05); border: 1px solid var(--neon-purple); padding: 20px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 5px;">Published Articles & Vlogs</h4>
+                    <span id="statTotalPosts" style="font-family: 'Orbitron', sans-serif; font-size: 1.8rem; color: #a855f7;">0</span>
+                </div>
+            </div>
+            <button class="btn-neon" style="width: auto; padding: 8px 20px; font-size: 0.8rem;" onclick="refreshAnalytics()"><i class="fa-solid fa-rotate"></i> Refresh Stats</button>
+        </div>
+
+        <!-- 3. Manage, Edit & Delete Published Blogs/Vlogs -->
+        <div class="card-box">
+            <h3><i class="fa-solid fa-list-check"></i> Manage & Edit Blogs & Vlogs</h3>
             <div style="overflow-x: auto;">
                 <table class="admin-table">
                     <thead>
@@ -273,6 +340,9 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_U3Dj2qRx375nhMyLxuSsgw_7iFHyDeo';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        let cachedComics = [];
+        let cachedArticles = [];
+
         if (localStorage.getItem('is_admin') === 'true') {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('dashboardScreen').style.display = 'block';
@@ -282,7 +352,7 @@
         function verifyAdmin() {
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
-            if (u === 'mahi' && p === 'mahi100') {
+            if (u === 'mahi' && p === 'admin123') {
                 localStorage.setItem('is_admin', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'block';
@@ -305,6 +375,8 @@
             loadAdminMusicList();
             loadAdminComicList();
             loadExistingVideoSetting();
+            loadAiKnowledgeBaseSettings();
+            refreshAnalytics();
             const savedName = localStorage.getItem('admin_name');
             if(savedName) document.getElementById('profileName').value = savedName;
         }
@@ -354,9 +426,9 @@
             }, { onConflict: 'key' });
 
             if(!error) {
-                alert('ফিচার্ড ভিডিও সফলভাবে সেভ হয়েছে!');
+                alert('ফিচার্ড ভিডিও সফলভাবে সেভ হয়েছে!');
             } else {
-                alert('ভিডিও সেভ করতে সমস্যা হয়েছে।');
+                alert('ভিডিও সেভ করতে সমস্যা হয়েছে।');
             }
         }
 
@@ -368,28 +440,107 @@
             }
         }
 
+        async function saveAiKnowledgeBase() {
+            const promptText = document.getElementById('aiSystemPromptInput').value.trim();
+            const q = document.getElementById('faqQuestionInput').value.trim();
+            const a = document.getElementById('faqAnswerInput').value.trim();
+
+            if(promptText) {
+                await _supabase.from('site_settings').upsert({
+                    key: 'ai_system_prompt',
+                    value: promptText
+                }, { onConflict: 'key' });
+            }
+
+            if(q && a) {
+                const { error } = await _supabase.from('ai_faqs').insert([{
+                    question: q,
+                    answer: a
+                }]);
+                if(!error) {
+                    document.getElementById('faqQuestionInput').value = '';
+                    document.getElementById('faqAnswerInput').value = '';
+                }
+            }
+
+            alert('AI Knowledge Base সফলভাবে আপডেট ও সেভ হয়েছে!');
+            loadAiKnowledgeBaseSettings();
+        }
+
+        async function loadAiKnowledgeBaseSettings() {
+            const { data: settingData } = await _supabase.from('site_settings').select('*').eq('key', 'ai_system_prompt').single();
+            if(settingData) {
+                document.getElementById('aiSystemPromptInput').value = settingData.value || '';
+            }
+
+            const tbody = document.getElementById('adminFaqTableBody');
+            const { data: faqData } = await _supabase.from('ai_faqs').select('*').order('created_at', { ascending: false });
+            
+            if(!faqData || faqData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">কোনো FAQ বা কাস্টম প্রম্পট আইটেম নেই।</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            faqData.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${item.question}</b></td>
+                        <td>${item.answer}</td>
+                        <td><button class="btn-neon" style="background:#ef4444; padding:4px 10px; font-size:0.75rem; width:auto;" onclick="deleteFaq('${item.id}')">Delete</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        async function deleteFaq(id) {
+            if(!confirm('এই FAQ আইটেমটি ডিলিট করতে চান?')) return;
+            await _supabase.from('ai_faqs').delete().eq('id', id);
+            alert('ডিলিট করা হয়েছে!');
+            loadAiKnowledgeBaseSettings();
+        }
+
+        async function refreshAnalytics() {
+            const { count: memberCount } = await _supabase.from('members').select('*', { count: 'exact', head: true });
+            const { count: postCount } = await _supabase.from('articles').select('*', { count: 'exact', head: true });
+
+            document.getElementById('statTotalMembers').innerText = memberCount || 0;
+            document.getElementById('statTotalPosts').innerText = postCount || 0;
+        }
+
+        // ================= COMIC FUNCTIONS (WITH TOP/BOTTOM DESC & QR) =================
         async function uploadComicBook() {
+            const editId = document.getElementById('editingComicId').value;
             const title = document.getElementById('comicTitleInput').value.trim();
             const poster = document.getElementById('comicPosterInput').value.trim();
             const pages = document.getElementById('comicPagesInput').value.trim();
+            const description = document.getElementById('comicDescInput').value.trim();
+            const top_description = document.getElementById('comicTopDescInput').value.trim();
+            const bottom_description = document.getElementById('comicBottomDescInput').value.trim();
+            const qr_code_image = document.getElementById('comicQrInput').value.trim();
 
             if(!title || !poster) { alert('কমিকসের নাম ও পোস্টার লিংক দিন!'); return; }
 
-            const { error } = await _supabase.from('comics').insert([{
-                title: title,
-                poster_image: poster,
-                description: 'Sci-Fi Comic Series',
-                pages_links: pages
-            }]);
+            const payload = { title, poster_image: poster, pages_links: pages, description: description || 'Sci-Fi Comic Series', top_description, bottom_description, qr_code_image };
 
-            if(!error) {
-                alert('কমিক সফলভাবে পাবলিশ হয়েছে!');
-                document.getElementById('comicTitleInput').value = '';
-                document.getElementById('comicPosterInput').value = '';
-                document.getElementById('comicPagesInput').value = '';
-                loadAdminComicList();
+            if (editId) {
+                const { error } = await _supabase.from('comics').update(payload).eq('id', editId);
+                if (!error) {
+                    alert('কমিক সফলভাবে আপডেট হয়েছে!');
+                    resetComicForm();
+                    loadAdminComicList();
+                } else {
+                    alert('কমিক আপডেট করতে সমস্যা হয়েছে।');
+                }
             } else {
-                alert('কমিক আপলোড করতে সমস্যা হয়েছে।');
+                const { error } = await _supabase.from('comics').insert([payload]);
+                if (!error) {
+                    alert('কমিক সফলভাবে পাবলিশ হয়েছে!');
+                    resetComicForm();
+                    loadAdminComicList();
+                } else {
+                    alert('কমিক আপলোড করতে সমস্যা হয়েছে।');
+                }
             }
         }
 
@@ -400,33 +551,69 @@
                 tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;">কোনো কমিকস নেই।</td></tr>`;
                 return;
             }
+            cachedComics = data;
             tbody.innerHTML = '';
             data.forEach(c => {
                 tbody.innerHTML += `
                     <tr>
                         <td><b>${c.title}</b></td>
-                        <td><button class="btn-neon" style="background:#ef4444; padding:4px 10px; font-size:0.75rem; width:auto;" onclick="deleteComic('${c.id}')">Delete</button></td>
+                        <td>
+                            <button class="btn-neon" style="background:#00f2fe; color:#030014; padding:4px 10px; font-size:0.75rem; width:auto; display:inline-block; margin-right:5px;" onclick="loadComicForEdit('${c.id}')">Edit</button>
+                            <button class="btn-neon" style="background:#ef4444; padding:4px 10px; font-size:0.75rem; width:auto; display:inline-block;" onclick="deleteComic('${c.id}')">Delete</button>
+                        </td>
                     </tr>
                 `;
             });
         }
 
+        function loadComicForEdit(id) {
+            const c = cachedComics.find(item => item.id == id);
+            if(!c) return;
+            document.getElementById('editingComicId').value = c.id;
+            document.getElementById('comicTitleInput').value = c.title;
+            document.getElementById('comicPosterInput').value = c.poster_image;
+            document.getElementById('comicPagesInput').value = c.pages_links || '';
+            document.getElementById('comicDescInput').value = c.description || '';
+            document.getElementById('comicTopDescInput').value = c.top_description || '';
+            document.getElementById('comicBottomDescInput').value = c.bottom_description || '';
+            document.getElementById('comicQrInput').value = c.qr_code_image || '';
+
+            document.getElementById('comicFormHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Comic`;
+            document.getElementById('saveComicBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Comic`;
+            window.scrollTo({ top: document.getElementById('comicFormHeading').offsetTop, behavior: 'smooth' });
+        }
+
+        function resetComicForm() {
+            document.getElementById('editingComicId').value = '';
+            document.getElementById('comicTitleInput').value = '';
+            document.getElementById('comicPosterInput').value = '';
+            document.getElementById('comicPagesInput').value = '';
+            document.getElementById('comicDescInput').value = '';
+            document.getElementById('comicTopDescInput').value = '';
+            document.getElementById('comicBottomDescInput').value = '';
+            document.getElementById('comicQrInput').value = '';
+            document.getElementById('comicFormHeading').innerHTML = `<i class="fa-solid fa-mask"></i> Science Comics Cloud Manager`;
+            document.getElementById('saveComicBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic`;
+        }
+
         async function deleteComic(id) {
             if(!confirm('কমিকটি ডিলিট করতে চান?')) return;
             await _supabase.from('comics').delete().eq('id', id);
-            alert('কমিক ডিলিট করা হয়েছে!');
+            alert('কমিক ডিলিট করা হয়েছে!');
             loadAdminComicList();
         }
 
+        // ================= ARTICLE / BLOG FUNCTIONS (WITH EDIT & PUBLISH) =================
         async function publishContentDirect() {
+            const editId = document.getElementById('editingArticleId').value;
             const type = document.getElementById('contentType').value;
-            const title = document.getElementById('newTitle').value.trim();
+            const rawTitle = document.getElementById('newTitle').value.trim();
             const category = document.getElementById('newTag').value.trim();
             const description = document.getElementById('newDesc').value.trim();
             const fileInput = document.getElementById('mediaFile').files[0];
             let customDate = document.getElementById('customDate').value;
 
-            if(!title || !description) { alert('Title & Description দিন!'); return; }
+            if(!rawTitle || !description) { alert('Title & Description দিন!'); return; }
 
             let mediaUrl = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80';
             if (fileInput) {
@@ -435,29 +622,105 @@
             }
 
             const publishTimestamp = customDate ? new Date(customDate).toISOString() : new Date().toISOString();
+            const formattedTitle = rawTitle.startsWith('[') ? rawTitle : `[${type}] ${rawTitle}`;
 
-            const newPost = {
-                id: Date.now(),
-                title: `[${type}] ${title}`,
-                category: category || 'Cosmos',
-                image_url: mediaUrl,
-                description,
-                likes_count: 0,
-                created_at: publishTimestamp
-            };
+            if (editId) {
+                let updatePayload = {
+                    title: formattedTitle,
+                    category: category || 'Cosmos',
+                    description,
+                    created_at: publishTimestamp
+                };
+                if (fileInput) {
+                    updatePayload.image_url = mediaUrl;
+                }
 
-            const { error } = await _supabase.from('articles').insert([newPost]);
-            if(!error) {
-                alert('সফলভাবে ক্লাউডে পাবলিশ হয়েছে!');
-                document.getElementById('newTitle').value = '';
-                document.getElementById('newTag').value = '';
-                document.getElementById('newDesc').value = '';
-                document.getElementById('mediaFile').value = '';
-                document.getElementById('customDate').value = '';
-                loadAdminArticles();
+                const { error } = await _supabase.from('articles').update(updatePayload).eq('id', editId);
+                if(!error) {
+                    alert('পোস্ট সফলভাবে আপডেট হয়েছে!');
+                    resetArticleForm();
+                    loadAdminArticles();
+                    refreshAnalytics();
+                } else {
+                    alert('পোস্ট আপডেট করতে সমস্যা হয়েছে।');
+                }
             } else {
-                alert('পাবলিশ করতে সমস্যা হয়েছে।');
+                const newPost = {
+                    id: Date.now(),
+                    title: formattedTitle,
+                    category: category || 'Cosmos',
+                    image_url: mediaUrl,
+                    description,
+                    likes_count: 0,
+                    created_at: publishTimestamp
+                };
+
+                const { error } = await _supabase.from('articles').insert([newPost]);
+                if(!error) {
+                    alert('সফলভাবে ক্লাউডে পাবলিশ হয়েছে!');
+                    resetArticleForm();
+                    loadAdminArticles();
+                    refreshAnalytics();
+                } else {
+                    alert('পাবলিশ করতে সমস্যা হয়েছে।');
+                }
             }
+        }
+
+        async function loadAdminArticles() {
+            const tbody = document.getElementById('adminArticleList');
+            const { data } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
+            if(!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">কোনো পোস্ট নেই।</td></tr>`;
+                return;
+            }
+            cachedArticles = data;
+            tbody.innerHTML = '';
+            data.forEach(art => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>${art.title}</b></td>
+                    <td>${art.category}</td>
+                    <td>${art.created_at ? art.created_at.split('T')[0] : 'Recent'}</td>
+                    <td>
+                        <button class="btn-neon" style="background:#00f2fe; color:#030014; padding:5px 10px; font-size:0.75rem; width:auto; display:inline-block; margin-right:5px;" onclick="loadArticleForEdit('${art.id}')">Edit</button>
+                        <button class="btn-neon" style="background:#ef4444; padding:5px 10px; font-size:0.75rem; width:auto; display:inline-block;" onclick="deleteArticle('${art.id}')">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function loadArticleForEdit(id) {
+            const art = cachedArticles.find(item => item.id == id);
+            if(!art) return;
+            document.getElementById('editingArticleId').value = art.id;
+            document.getElementById('newTitle').value = art.title.replace(/^\[.*?\]\s*/, '');
+            document.getElementById('newTag').value = art.category || '';
+            document.getElementById('newDesc').value = art.description || '';
+            
+            document.getElementById('blogFormHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Content`;
+            document.getElementById('saveArticleBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Content`;
+            window.scrollTo({ top: document.getElementById('blogFormHeading').offsetTop, behavior: 'smooth' });
+        }
+
+        function resetArticleForm() {
+            document.getElementById('editingArticleId').value = '';
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newTag').value = '';
+            document.getElementById('newDesc').value = '';
+            document.getElementById('mediaFile').value = '';
+            document.getElementById('customDate').value = '';
+            document.getElementById('blogFormHeading').innerHTML = `<i class="fa-solid fa-pen-nib"></i> Publish Content`;
+            document.getElementById('saveArticleBtn').innerHTML = `Publish to Cloud`;
+        }
+
+        async function deleteArticle(id) {
+            if(!confirm('আপনি কি নিশ্চিত এই পোস্টটি ডিলিট করতে চান?')) return;
+            await _supabase.from('articles').delete().eq('id', id);
+            alert('পোস্ট সফলভাবে ডিলিট করা হয়েছে!');
+            loadAdminArticles();
+            refreshAnalytics();
         }
 
         async function uploadMusicTrack() {
@@ -484,13 +747,13 @@
             }]);
 
             if(!error) {
-                alert('মিউজিক সফলভাবে ক্লাউডে আপলোড ও সেভ হয়েছে!');
+                alert('মিউজিক সফলভাবে ক্লাউডে আপলোড ও সেভ হয়েছে!');
                 titleInput.value = '';
                 fileInput.value = '';
                 document.getElementById('musicLockCheckbox').checked = false;
                 loadAdminMusicList();
             } else {
-                alert('মিউজিক সেভ করতে সমস্যা হয়েছে।');
+                alert('মিউজিক সেভ করতে সমস্যা হয়েছে।');
             }
         }
 
@@ -521,42 +784,15 @@
         async function setTrackLock(id) {
             await _supabase.from('music_tracks').update({ is_locked: false }).neq('id', '00000000-0000-0000-0000-000000000000');
             await _supabase.from('music_tracks').update({ is_locked: true }).eq('id', id);
-            alert('লক স্ট্যাটাস আপডেট করা হয়েছে!');
+            alert('লক স্ট্যাটাস আপডেট করা হয়েছে!');
             loadAdminMusicList();
         }
 
         async function deleteTrack(id) {
             if(!confirm('ট্র্যাকটি ডিলিট করতে চান?')) return;
             await _supabase.from('music_tracks').delete().eq('id', id);
-            alert('ট্র্যাক সফলভাবে ডিলিট করা হয়েছে!');
+            alert('ট্র্যাক সফলভাবে ডিলিট করা হয়েছে!');
             loadAdminMusicList();
-        }
-
-        async function loadAdminArticles() {
-            const tbody = document.getElementById('adminArticleList');
-            const { data } = await _supabase.from('articles').select('*').order('created_at', { ascending: false });
-            if(!data || data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">কোনো পোস্ট নেই।</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = '';
-            data.forEach(art => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${art.title}</b></td>
-                    <td>${art.category}</td>
-                    <td>${art.created_at ? art.created_at.split('T')[0] : 'Recent'}</td>
-                    <td><button class="btn-neon" style="background:#ef4444; padding:5px 10px; font-size:0.75rem; width:auto;" onclick="deleteArticle('${art.id}')">Delete</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function deleteArticle(id) {
-            if(!confirm('আপনি কি নিশ্চিত এই পোস্টটি ডিলিট করতে চান?')) return;
-            await _supabase.from('articles').delete().eq('id', id);
-            alert('পোস্ট সফলভাবে ডিলিট করা হয়েছে!');
-            loadAdminArticles();
         }
 
         async function loadAdminInbox() {
@@ -628,7 +864,7 @@
                 tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">কোনো মেম্বার নেই।</td></tr>`;
                 return;
             }
-            tbody.innerHTML = '';
+            tbody.innerHTML = ``;
             data.forEach((m, index) => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `<td>${index + 1}</td><td>${m.email}</td><td>${new Date(m.joined_at).toLocaleString()}</td>`;
