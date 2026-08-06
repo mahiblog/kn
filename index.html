@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Portal | Muktasin Mahi</title>
+    <title>Space Portal | \Muktasin Mahi</title>
     <!-- ট্যাবের কর্নারে গোল পার্মানেন্ট পিকচার (ফেভিকন) সেট করা হলো -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -102,6 +102,11 @@
         .writer-info { flex: 1; min-width: 280px; }
         .writer-info h1 { font-family: 'Orbitron', sans-serif; font-size: 1.7rem; color: white; margin-bottom: 8px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
         .writer-info p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin: 0 auto; max-width: 800px; }
+
+        /* Video Showcase Screen (Updated Style & Frame) */
+        .video-showcase-screen { background: var(--surface); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 20px; padding: 20px; box-shadow: 0 0 40px rgba(0,242,254,0.15), inset 0 0 20px rgba(0,242,254,0.05); }
+        .video-container { width: 100%; aspect-ratio: 16/9; max-height: 420px; background: #000; border-radius: 14px; overflow: hidden; position: relative; border: 1px solid var(--border); box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        .video-container iframe, .video-container video { width: 100%; height: 100%; object-fit: cover; border: none; pointer-events: none; }
 
         .cosmic-showcase-box { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid rgba(0, 242, 254, 0.15); border-radius: 20px; padding: 35px; margin-bottom: 30px; box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 242, 254, 0.03); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .widgets-row-container { display: flex; align-items: center; justify-content: center; width: 100%; padding: 15px 0; }
@@ -397,13 +402,13 @@
         .section-title { font-family: 'Orbitron', sans-serif; font-size: 1.25rem; color: white; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 10px rgba(0,242,254,0.3); }
         .section-title i { color: var(--neon-cyan); }
 
-        .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        .article-card { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: var(--glow); display: flex; flex-direction: column; justify-content: space-between; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .article-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 10px 35px rgba(0, 242, 254, 0.3); }
+        .articles-grid, .comics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .article-card, .comic-card { background: var(--surface); backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: var(--glow); display: flex; flex-direction: column; justify-content: space-between; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .article-card:hover, .comic-card:hover { border-color: var(--neon-cyan); transform: translateY(-5px); box-shadow: 0 10px 35px rgba(0, 242, 254, 0.3); }
         
         .card-img-container { position: relative; width: 100%; height: 260px; background: #010008; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .card-img { width: 100%; height: 100%; object-fit: contain; background: #010008; transition: 0.6s ease; }
-        .article-card:hover .card-img { transform: scale(1.03); }
+        .article-card:hover .card-img, .comic-card:hover .card-img { transform: scale(1.03); }
         
         .card-details { padding: 20px; }
         .card-meta-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -415,10 +420,13 @@
         .action-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
         .action-btn:hover { background: var(--neon-cyan); color: var(--bg-space); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
 
-        .full-article-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.94); backdrop-filter: blur(25px); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
-        .full-article-content { max-width: 750px; margin: 30px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
-        .close-full-article { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
-        .close-full-article:hover { color: var(--neon-cyan); }
+        .full-article-modal, .full-comic-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.94); backdrop-filter: blur(25px); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
+        .full-article-content, .full-comic-content { max-width: 750px; margin: 30px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
+        .close-full-article, .close-full-comic { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
+        .close-full-article:hover, .close-full-comic:hover { color: var(--neon-cyan); }
+
+        .comic-pages-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
+        .comic-page-img { width: 100%; max-width: 650px; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.6); object-fit: contain; }
 
         .blog-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin: 20px 0; }
         .blog-gallery-grid img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
@@ -439,23 +447,12 @@
         .close-modal { position: absolute; top: 12px; right: 15px; background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
 
         .chat-float-btn { 
-            position: fixed; 
-            bottom: 20px; 
-            right: 20px; 
+            position: fixed; bottom: 20px; right: 20px; 
             background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); 
-            color: white; 
-            width: 48px; 
-            height: 48px; 
-            border-radius: 50%; 
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 1.3rem; 
-            z-index: 999; 
-            border: 2px solid rgba(255,255,255,0.3); 
-            transition: 0.3s ease; 
+            color: white; width: 48px; height: 48px; border-radius: 50%; 
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.5); cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; 
+            z-index: 999; border: 2px solid rgba(255,255,255,0.3); transition: 0.3s ease; 
         }
         .chat-float-btn:hover { transform: scale(1.15) rotate(10deg); box-shadow: 0 0 35px var(--neon-cyan); }
 
@@ -477,15 +474,8 @@
         .send-btn { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700; }
 
         .flying-spaceship {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 2.2rem;
-            color: var(--neon-cyan);
-            z-index: 9999;
-            pointer-events: none;
-            filter: drop-shadow(0 0 10px var(--neon-cyan));
-            animation: flyToSpace 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            position: fixed; bottom: 20px; right: 20px; font-size: 2.2rem; color: var(--neon-cyan); z-index: 9999; pointer-events: none;
+            filter: drop-shadow(0 0 10px var(--neon-cyan)); animation: flyToSpace 2.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
         @keyframes flyToSpace {
             0% { transform: translate(0, 0) scale(0.6) rotate(0deg); opacity: 1; }
@@ -493,113 +483,32 @@
             100% { transform: translate(-350px, -600px) scale(0.3) rotate(-45deg); opacity: 0; }
         }
 
-        .sun-footer-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 50px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .saturn-btn-wrap {
-          border: 0;
-          background: radial-gradient(ellipse at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 70%);
-          font-size: 15px;
-          height: 200px;
-          width: 300px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 20px;
-        }
-
-        .main {
-          width: 70px;
-          margin: auto;
-          position: relative;
-          transform: rotateZ(0deg);
-          isolation: isolate;
-          scale: 1;
-          transition: all 1.5s;
-        }
-
-        .main:hover {
-          transform: rotateZ(240deg);
-          scale: 2;
-          filter: drop-shadow(-1px -1px 5px #69e9d6);
-        }
-
-        .rings {
-          position: absolute;
-          width: 200px;
-          height: 100px;
-          border-radius: 150px 150px 0 0;
-          background: radial-gradient(circle at 50% 100%, transparent 30%, #69e9d6 40%, #404D44 50%, #44867c 60%, #404D44 70%, transparent);
-        }
-
-        #saturn {
-          width: 70px;
-          height: 70px;
-          border-radius: 50%;
-          background: linear-gradient(80deg, #69e9d6, #404D44, #000000);
-        }
-
+        .sun-footer-container { display: flex; justify-content: center; align-items: center; padding: 50px 0; position: relative; z-index: 2; }
+        .saturn-btn-wrap { border: 0; background: radial-gradient(ellipse at 50% 50%, rgba(0, 242, 254, 0.1) 0%, transparent 70%); font-size: 15px; height: 200px; width: 300px; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 20px; }
+        .main { width: 70px; margin: auto; position: relative; transform: rotateZ(0deg); isolation: isolate; scale: 1; transition: all 1.5s; }
+        .main:hover { transform: rotateZ(240deg); scale: 2; filter: drop-shadow(-1px -1px 5px #69e9d6); }
+        .rings { position: absolute; width: 200px; height: 100px; border-radius: 150px 150px 0 0; background: radial-gradient(circle at 50% 100%, transparent 30%, #69e9d6 40%, #404D44 50%, #44867c 60%, #404D44 70%, transparent); }
+        #saturn { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(80deg, #69e9d6, #404D44, #000000); }
         #ring1 { transform: rotateX(80deg); top: -20px; left: -65px; }
         #ring2 { transform: rotateX(-100deg); left: -65px; z-index: -1; top: -3px; }
-
-        .asteriods-large {
-          position: absolute;
-          width: 8px;
-          height: 10px;
-          border-radius: 15px 8px;
-          background: linear-gradient(220deg, #6f7776, #598ea3, #311515);
-          transform: rotateZ(0deg);
-          transition: all 3s;
-        }
-
+        .asteriods-large { position: absolute; width: 8px; height: 10px; border-radius: 15px 8px; background: linear-gradient(220deg, #6f7776, #598ea3, #311515); transition: all 3s; }
         #asteriod1 { top: 8px; height: 12px; width: 12px; border-radius: 50%; }
         #asteriod2 { top: 35px; height: 10px; left: -55px; }
         #asteriod3 { top: 35px; height: 8px; left: 85px; }
         #asteriod4 { top: 40px; height: 4px; width: 4px; left: -40px; }
         #asteriod5 { top: 35px; height: 4px; width: 4px; left: 82px; }
-
-        .asteriods-small {
-          position: absolute;
-          width: 4px;
-          height: 3px;
-          border-radius: 15px 8px;
-          background: linear-gradient(80deg, #6f7776, #598ea3, #311515);
-          transform-origin: 50px 50px;
-          transform: rotateZ(0deg);
-          transition: all 3s;
-        }
-
+        .asteriods-small { position: absolute; width: 4px; height: 3px; border-radius: 15px 8px; background: linear-gradient(80deg, #6f7776, #598ea3, #311515); transform-origin: 50px 50px; transition: all 3s; }
         #asteriod6 { top: 6px; left: -5px; border-radius: 50%; }
         #asteriod7 { top: 15px; left: -35px; }
         #asteriod8 { top: 35px; left: 65px; }
         #asteriod9 { top: 60px; left: -10px; }
         #asteriod10 { top: 15px; left: 112px; }
-
         #explore { position: absolute; top: 32px; font-size: 15px; color: hsl(171, 59%, 74%); left: 10px; transition: all 3s; }
-
         .main:hover > .asteriods-large, .main:hover > .asteriods-small { transform: translateX(28px); }
         .main:hover > #explore { translate: -10px 20px; transform: rotateZ(120deg); }
-        .main:not(hover) > #explore { translate: 0px; transform: rotateZ(0deg); }
-        .main:not(hover) > .asteriods-large, .main:not(hover) > .asteriods-small { transform: translateX(0px); }
-        .main:is(:active) > #explore { translate: -100px 200px; }
-        .main:is(:active) { translate: -200px; }
 
         footer { text-align: center; padding: 25px; background: rgba(3, 0, 20, 0.9); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; margin-top: 20px; position: relative; z-index: 2; line-height: 1.6; }
         footer span { color: var(--neon-cyan); font-weight: 600; }
-
-        @media(max-width: 480px) {
-            .writer-hero { padding: 20px; gap: 15px; }
-            .writer-info h1 { font-size: 1.4rem; }
-            .articles-grid { grid-template-columns: 1fr; }
-            .chat-modal { width: 95%; right: 2.5%; bottom: 75px; }
-        }
     </style>
 </head>
 <body>
@@ -628,26 +537,15 @@
 
     <div id="progress-container"><div id="progress-bar"></div></div>
     
-    <!-- Abundant Starry & Comets Space Background -->
     <div class="space-bg">
         <div class="nebula-glow"></div>
         <div class="nebula-glow-2"></div>
-        
-        <div class="box-of-star1"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:250px; left:400px;"></div><div class="star" style="top:500px; left:750px;"></div></div>
-        <div class="box-of-star2"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:350px; left:200px;"></div><div class="star" style="top:650px; left:1050px;"></div></div>
-        <div class="box-of-star3"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:150px; left:850px;"></div><div class="star" style="top:450px; left:1300px;"></div></div>
-        <div class="box-of-star4"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div><div class="star" style="top:550px; left:500px;"></div><div class="star" style="top:750px; left:300px;"></div></div>
-
+        <div class="box-of-star1"><div class="star star-position1"></div><div class="star star-position2"></div><div class="star star-position3"></div><div class="star star-position4"></div><div class="star star-position5"></div></div>
         <div class="shooting-star-container">
-            <div class="shooting-star"></div>
-            <div class="shooting-star"></div>
-            <div class="shooting-star"></div>
-            <div class="shooting-star"></div>
-            <div class="shooting-star"></div>
+            <div class="shooting-star"></div><div class="shooting-star"></div><div class="shooting-star"></div>
         </div>
     </div>
 
-    <!-- Background Audio Element -->
     <audio id="bgAudio" loop></audio>
 
     <!-- EVA Robot & Cinematic Hologram Projection Overlay -->
@@ -656,20 +554,14 @@
             <div class="modelViewPort">
                 <div class="eva">
                     <div class="head">
-                        <div class="eyeChamber">
-                            <div class="eye"></div>
-                            <div class="eye"></div>
-                        </div>
+                        <div class="eyeChamber"><div class="eye"></div><div class="eye"></div></div>
                     </div>
                     <div class="body-robot">
-                        <div class="hand"></div>
-                        <div class="hand"></div>
-                        <div class="scannerThing"></div>
-                        <div class="scannerOrigin"></div>
+                        <div class="hand"></div><div class="hand"></div>
+                        <div class="scannerThing"></div><div class="scannerOrigin"></div>
                     </div>
                 </div>
             </div>
-            <!-- Projected Hologram Popup Card -->
             <div class="projected-popup-card" id="projectedCardBox">
                 <h4><i class="fa-solid fa-robot"></i> EVA-01 Hologram Link</h4>
                 <p>আপনি কি ব্যাকগ্রাউন্ড মিউজিকের সাথে মহাকাশের এই ভ্রমণটি উপভোগ করতে চান?</p>
@@ -681,25 +573,25 @@
         </div>
     </div>
 
-    <!-- Floating Music Widget Button -->
-    <button class="music-float-btn" id="musicFloatBtn" onclick="toggleMusicModal()" title="Study & Sci-Fi Music Player"><i class="fa-solid fa-music"></i></button>
+    <button class="music-float-btn" onclick="toggleMusicModal()" title="Music Player"><i class="fa-solid fa-music"></i></button>
 
     <div class="music-modal" id="musicModal">
         <div class="music-header">
-            <h4><i class="fa-solid fa-headphones-simple"></i> Cosmic Audio Player</h4>
-            <button onclick="toggleMusicModal()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.1rem;">&times;</button>
+            <h4><i class="fa-solid fa-headphones-simple"></i> Cosmic Audio</h4>
+            <button onclick="toggleMusicModal()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="music-body" id="musicPlaylistContainer">
-            <div style="font-size:0.780rem; color:var(--text-muted); text-align:center; padding:10px;">লোড হচ্ছে...</div>
+            <div style="font-size:0.780rem; color:var(--text-muted); text-align:center;">লোড হচ্ছে...</div>
         </div>
     </div>
 
     <header>
         <div class="nav-container">
-            <a href="index.html" class="logo" id="siteLogoText"><i class="fa-solid fa-satellite"></i> Mahi<span>.Space</span></a>
+            <a href="index.html" class="logo"><i class="fa-solid fa-satellite"></i> Mahi<span>.Space</span></a>
             <nav class="nav-menu">
                 <a href="index.html">Home</a>
                 <a href="#articles">Articles (<span id="totalPostCount">0</span>)</a>
+                <a href="#comics">Comics (<span id="totalComicCount">0</span>)</a>
                 <button class="btn-neon" onclick="triggerLoaderAndExecute(openJoinModal)"><i class="fa-solid fa-user-plus"></i> Join</button>
             </nav>
         </div>
@@ -707,13 +599,12 @@
 
     <div class="main-container">
         <section class="writer-hero">
-            <div class="writer-avatar" id="writerAvatarDiv">
+            <div class="writer-avatar">
                 <img src="https://lh3.googleusercontent.com/d/1e3cjv0iVkmKB6DLutBW0CTOwcrJs2d6I" alt="Admin Profile">
             </div>
             <div class="writer-info">
                 <h1 id="writerNameTitle">Muktasin Mahi</h1>
-                <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and if you like them share with your friends, family and others. I shall keep writing blogs on various topics here so follow me and stay tuned.</p>
-                
+                <p>Hi. I am Muktasin Mahi, a teenager who is enthusiastic about space & science. Read my blogs and comics, stay tuned!</p>
                 <div style="margin-top: 15px;">
                     <button class="btn-neon" onclick="triggerLoaderAndExecute(openAboutModal)"><i class="fa-solid fa-user-circle"></i> View Full Bio Details</button>
                 </div>
@@ -723,50 +614,55 @@
         <div class="about-modal" id="aboutModal">
             <div class="about-modal-box">
                 <button class="close-about-modal" onclick="closeAboutModal()">&times;</button>
-                <h3 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); margin-bottom:12px; display:flex; align-items:center; gap:8px; font-size:1.1rem;">
-                    <i class="fa-solid fa-id-card"></i> About Me Details
-                </h3>
+                <h3 style="font-family:'Orbitron',sans-serif; color:var(--neon-cyan); margin-bottom:12px;"><i class="fa-solid fa-id-card"></i> About Me Details</h3>
                 <div class="about-grid">
                     <div class="about-item"><strong>Gender:</strong> Male</div>
                     <div class="about-item"><strong>Industry:</strong> Education</div>
                     <div class="about-item"><strong>Occupation:</strong> Student</div>
                     <div class="about-item"><strong>Location:</strong> Bangladesh</div>
                     <div class="about-item" style="grid-column: 1 / -1;"><strong>Interests:</strong> Space, Astrophysics, Reading Books</div>
-                    <div class="about-item" style="grid-column: 1 / -1;"><strong>Favorite Movies:</strong> Interstellar, The Dark Knight, Inglourious Basterds, 12 Angry Men, Inception</div>
-                    <div class="about-item" style="grid-column: 1 / -1;"><strong>Favorite Books:</strong> The Kite Runner, The Alchemist, Professor Shonku</div>
                 </div>
             </div>
         </div>
 
-        <section id="articles">
-            <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Live Space Publications</h2>
-            
-            <div class="cosmic-showcase-box">
-                <div class="widgets-row-container">
-                    <div class="planet-widget-box">
-                        <div class="solar">
-                            <i class="mercury"></i>
-                            <i class="venus"></i>
-                            <i class="earth"></i>
-                            <i class="mars"></i>
-                            <i class="jupiter"></i>
-                            <i class="saturn"></i>
-                            <i class="uranus"></i>
-                        </div>
+        <!-- 1. Cosmic Showcase (3D Planet Solar System) -->
+        <div class="cosmic-showcase-box">
+            <div class="widgets-row-container">
+                <div class="planet-widget-box">
+                    <div class="solar">
+                        <i class="mercury"></i><i class="venus"></i><i class="earth"></i>
+                        <i class="mars"></i><i class="jupiter"></i><i class="saturn"></i><i class="uranus"></i>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <!-- 2. Admin Controlled Video Screen (No controls, smooth playback, audio enabled/muted support) -->
+        <section class="video-showcase-screen" id="adminVideoSection" style="display:none;">
+            <h2 class="section-title"><i class="fa-solid fa-video"></i> Featured Science Broadcast</h2>
+            <div class="video-container" id="videoFrameContainer"></div>
+        </section>
+
+        <!-- 3. Live Space Publications (Articles) -->
+        <section id="articles">
+            <h2 class="section-title"><i class="fa-solid fa-rocket"></i> Live Space Publications</h2>
             <div class="articles-grid" id="articlesGridContainer">
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-                    কোনো পোস্ট পাওয়া যায়নি। অ্যাডমিন প্যানেল থেকে পোস্ট করলে এখানে প্রদর্শিত হবে।
-                </div>
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">কোনো পোস্ট পাওয়া যায়নি।</div>
+            </div>
+        </section>
+
+        <!-- 4. Science Comics Section (Google Drive Link Support) -->
+        <section id="comics">
+            <h2 class="section-title"><i class="fa-solid fa-mask"></i> Science Comics</h2>
+            <div class="comics-grid" id="comicsGridContainer">
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">কোনো কমিকস পাওয়া যায়নি।</div>
             </div>
         </section>
     </div>
 
+    <!-- 5. Saturn 3D Explore Footer Button -->
     <div class="sun-footer-container">
-        <button class="saturn-btn-wrap">
+        <button class="saturn-btn-wrap" onclick="alert('মহাকাশের গভীরে স্বাগতম!')">
           <div class="main">
             <div class="rings" id="ring1"></div>
             <div class="rings" id="ring2"></div>
@@ -781,16 +677,26 @@
             <div class="asteriods-small" id="asteriod9"></div>
             <div class="asteriods-small" id="asteriod10"></div>
             <div id="saturn"></div>
-            <div id="explore">Explore</div>
+            <div id="explore"></div>
           </div>
         </button>
+    </div>
+
+    <!-- Modals for Full Article, Comics, Join & Chat -->
+    <div class="full-comic-modal" id="fullComicModal">
+        <div class="full-comic-content">
+            <button class="close-full-comic" onclick="closeComicReader()">&times;</button>
+            <span class="card-tag" style="display:block; margin-bottom:6px;">Science Comic Series</span>
+            <h1 id="comicModalTitle" style="font-family:'Orbitron',sans-serif; color:white; font-size:1.3rem; margin-bottom:10px;"></h1>
+            <p id="comicModalDesc" style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin-bottom:15px;"></p>
+            <div class="comic-pages-stack" id="comicPagesContainer"></div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="joinMemberModal">
         <div class="modal-box">
             <button class="close-modal" onclick="closeJoinModal()">&times;</button>
-            <h3><i class="fa-solid fa-user-astronaut" style="color:var(--neon-cyan);"></i> Join Portal Community</h3>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 15px;">আপনার ইমেইল দিয়ে আমাদের কমিউনিটির মেম্বার হয়ে যান!</p>
+            <h3><i class="fa-solid fa-user-astronaut" style="color:var(--neon-cyan);"></i> Join Portal</h3>
             <input type="email" id="memberEmailInput" class="modal-input" placeholder="Enter your email...">
             <button class="btn-neon" style="width: 100%; justify-content: center;" onclick="triggerLoaderAndExecute(registerMember)">Register</button>
         </div>
@@ -802,11 +708,9 @@
             <span id="full-art-tag" class="card-tag" style="display:block; margin-bottom:8px;"></span>
             <h1 id="full-art-title" style="font-family:'Orbitron',sans-serif; color:white; font-size:1.4rem; margin-bottom:12px;"></h1>
             <p id="full-art-date" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;"></p>
-            
-            <div style="width:100%; max-height:420px; overflow:hidden; border-radius:10px; margin-bottom:15px; display:flex; justify-content:center; background:#010008; padding: 5px;">
+            <div style="width:100%; max-height:420px; overflow:hidden; border-radius:10px; margin-bottom:15px; display:flex; justify-content:center; background:#010008; padding:5px;">
                 <img id="full-art-img" src="" style="max-width:100%; max-height:400px; object-fit:contain;" alt="Full Image">
             </div>
-
             <div class="blog-gallery-grid" id="fullArtGalleryContainer"></div>
             <div id="full-art-desc" style="color:var(--text-muted); line-height:1.7; font-size:0.95rem; margin-bottom:20px;"></div>
 
@@ -827,7 +731,7 @@
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to Write (Muktasin Mahi)</h4>
+            <h4>Talk to writer (Muktasin Mahi)</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
@@ -835,7 +739,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 <span>Kazim Nahian</span> | Mobile : 09638183029 | KNWeb</p>
+        <p>&copy; 2026 <span>Kazim Nahian</span> | মোবাইল: 09638183029 | KNWeb</p>
         <p>All Cosmic Rights Reserved.</p>
     </footer>
 
@@ -843,24 +747,16 @@
         function triggerLoaderAndExecute(callback) {
             const loader = document.getElementById('loader-overlay');
             loader.classList.add('active');
-            const randomTime = Math.floor(Math.random() * 2000) + 1000;
             setTimeout(() => {
                 loader.classList.remove('active');
                 if (typeof callback === 'function') { callback(); }
-            }, randomTime);
+            }, 1200);
         }
 
         window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('loader-overlay');
-                loader.classList.remove('active');
-            }, 2000);
+            setTimeout(() => { document.getElementById('loader-overlay').classList.remove('active'); }, 1500);
             initPortal();
-
-            // সাইটে ঢোকার ঠিক ৪ সেকেন্ড পর ইভা রোবটটি চমৎকারভাবে উড়ে এসে হাজির হবে
-            setTimeout(() => {
-                showRobotPopup();
-            }, 4000);
+            setTimeout(() => { showRobotPopup(); }, 4000);
         });
 
         const SUPABASE_URL = 'https://zpmptjenzhdjxoiuhfyk.supabase.co';
@@ -874,6 +770,7 @@
         });
 
         let articles = [];
+        let comics = [];
         let activeArticleId = null;
         let chatUser = localStorage.getItem('chat_user_name') || null;
         let chatEmail = localStorage.getItem('chat_user_email') || null;
@@ -883,12 +780,108 @@
         async function initPortal() {
             await loadBrandingData();
             await fetchArticles();
+            await fetchComics();
             await loadMusicPlaylist();
+            await loadAdminVideoScreen();
         }
 
         async function loadBrandingData() {
             const savedName = localStorage.getItem('admin_name');
             if(savedName) document.getElementById('writerNameTitle').innerText = savedName;
+        }
+
+        async function loadAdminVideoScreen() {
+            const { data } = await _supabase.from('site_settings').select('*').eq('key', 'featured_video').single();
+            if (data && data.value) {
+                const sec = document.getElementById('adminVideoSection');
+                const container = document.getElementById('videoFrameContainer');
+                sec.style.display = 'block';
+
+                let vidUrl = data.value;
+                let isMuted = data.is_muted ? true : false;
+
+                if (vidUrl.includes('youtube.com') || vidUrl.includes('youtu.be')) {
+                    let videoId = vidUrl.includes('youtu.be') ? vidUrl.split('/').pop() : new URL(vidUrl).searchParams.get('v');
+                    let ytMute = isMuted ? '&mute=1' : '&mute=0';
+                    container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1${ytMute}" allow="autoplay"></iframe>`;
+                } else {
+                    // Direct video with no controls, background animation style
+                    let muteAttr = isMuted ? 'muted' : '';
+                    container.innerHTML = `<video src="${vidUrl}" autoplay loop ${muteAttr} playsinline></video>`;
+                }
+            }
+        }
+
+        function convertDriveLink(url) {
+            if (!url) return '';
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/(.*?)\/|\?id=(.*?)(&|$)/);
+                const fileId = match ? (match[1] || match[2]) : null;
+                if (fileId) {
+                    return `https://lh3.googleusercontent.com/d/${fileId}`;
+                }
+            }
+            return url;
+        }
+
+        async function fetchComics() {
+            const { data } = await _supabase.from('comics').select('*').order('created_at', { ascending: false });
+            const grid = document.getElementById('comicsGridContainer');
+            if (data && data.length > 0) {
+                comics = data;
+                document.getElementById('totalComicCount').innerText = comics.length;
+                grid.innerHTML = '';
+                comics.forEach(c => {
+                    let poster = convertDriveLink(c.poster_image);
+                    grid.innerHTML += `
+                        <div class="comic-card">
+                            <div class="card-img-container">
+                                <img src="${poster}" alt="Comic Poster" class="card-img">
+                            </div>
+                            <div class="card-details">
+                                <div class="card-meta-info">
+                                    <span class="card-tag">Science Comic</span>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">${c.created_at ? c.created_at.split('T')[0] : ''}</span>
+                                </div>
+                                <h3 class="card-title">${c.title}</h3>
+                                <p class="card-desc">${c.description}</p>
+                                <div class="blog-actions">
+                                    <button class="action-btn" onclick="openComicReader('${c.id}')"><i class="fa-solid fa-book-open"></i> Read Comic</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                comics = [];
+                document.getElementById('totalComicCount').innerText = '0';
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px;">কোনো কমিকস নেই।</div>`;
+            }
+        }
+
+        function openComicReader(id) {
+            const c = comics.find(item => item.id == id);
+            if(!c) return;
+            document.getElementById('comicModalTitle').innerText = c.title;
+            document.getElementById('comicModalDesc').innerText = c.description;
+
+            const stackContainer = document.getElementById('comicPagesContainer');
+            stackContainer.innerHTML = '';
+
+            if (c.pages_links) {
+                let links = c.pages_links.split(',');
+                links.forEach(link => {
+                    let directUrl = convertDriveLink(link.trim());
+                    if (directUrl) {
+                        stackContainer.innerHTML += `<img src="${directUrl}" class="comic-page-img" alt="Comic Page">`;
+                    }
+                });
+            }
+            document.getElementById('fullComicModal').style.display = 'block';
+        }
+
+        function closeComicReader() {
+            document.getElementById('fullComicModal').style.display = 'none';
         }
 
         function toggleMusicModal() {
@@ -919,12 +912,11 @@
                     `;
                     item.onclick = () => {
                         togglePlayTrack(track.id, track.audio_url);
-                        alert('টিপস: আপনি চাইলে মিউজিক প্লেয়ারের লিস্ট থেকে যেকোনো সময় গান পরিবর্তন করতে পারেন!');
                     };
                     container.appendChild(item);
                 });
             } else {
-                container.innerHTML = `<div style="font-size:0.780rem; color:var(--text-muted); text-align:center; padding:10px;">কোনো মিউজিক নেই। অ্যাডমিন প্যানেল থেকে যোগ করুন।</div>`;
+                container.innerHTML = `<div style="font-size:0.780rem; color:var(--text-muted); text-align:center; padding:10px;">কোনো মিউজিক নেই।</div>`;
             }
         }
 
@@ -933,21 +925,12 @@
             const robotFly = document.getElementById('robotFlyWrapper');
             const popupCard = document.getElementById('projectedCardBox');
 
-            // রিসেট অ্যানিমেশন ক্লাস
             robotFly.classList.remove('fly-in', 'fly-out');
             popupCard.classList.remove('show-card');
-
             overlay.style.display = 'flex';
             
-            // রোবট উড়ে আসার অ্যানিমেশন ট্রিগার
-            setTimeout(() => {
-                robotFly.classList.add('fly-in');
-            }, 50);
-
-            // রোবট সেন্টারে আসার পর বুক থেকে লেজার প্রজেকশন কার্ডটি ওপেন হবে
-            setTimeout(() => {
-                popupCard.classList.add('show-card');
-            }, 1400);
+            setTimeout(() => { robotFly.classList.add('fly-in'); }, 50);
+            setTimeout(() => { popupCard.classList.add('show-card'); }, 1400);
         }
 
         function handleRobotMusicChoice(yes) {
@@ -955,11 +938,9 @@
             const robotFly = document.getElementById('robotFlyWrapper');
             const popupCard = document.getElementById('projectedCardBox');
 
-            // কার্ডটি আগে হাইড হবে
             popupCard.classList.remove('show-card');
 
             if (yes && defaultLockedTrackUrl) {
-                // রোবটটি ফ্লোটিং মিউজিক বাটনের দিকে উড়ে চলে যাবে
                 setTimeout(() => {
                     robotFly.classList.remove('fly-in');
                     robotFly.classList.add('fly-out');
@@ -971,22 +952,7 @@
 
                     const audioElem = document.getElementById('bgAudio');
                     audioElem.src = defaultLockedTrackUrl;
-                    audioElem.play().then(() => {
-                        musicTracks.forEach(t => {
-                            if(t.audio_url === defaultLockedTrackUrl) {
-                                const activeItem = document.getElementById(`track_${t.id}`);
-                                if(activeItem) {
-                                    document.querySelectorAll('.music-item').forEach(el => {
-                                        el.classList.remove('active');
-                                        el.querySelector('.play-pause-icon').className = "fa-solid fa-play play-pause-icon";
-                                    });
-                                    activeItem.classList.add('active');
-                                    activeItem.querySelector('.play-pause-icon').className = "fa-solid fa-pause play-pause-icon";
-                                }
-                            }
-                        });
-                        alert('নোট: গান বাজছে! আপনি চাইলে ফ্লোটিং মিউজিক বাটন থেকে যেকোনো সময় গান পরিবর্তন করে নিতে পারেন।');
-                    }).catch(e => console.log("Audio autoplay restricted."));
+                    audioElem.play().catch(e => console.log("Audio restriction."));
                 }, 1200);
             } else {
                 setTimeout(() => {
@@ -1014,9 +980,7 @@
                     });
                     clickedItem.classList.add('active');
                     iconElem.className = "fa-solid fa-pause play-pause-icon";
-                }).catch(err => {
-                    alert('অডিও প্লে করতে ব্রাউজারে অনুমতি দিন!');
-                });
+                }).catch(err => {});
             }
         }
 
@@ -1077,11 +1041,7 @@
             } else {
                 articles = [];
                 document.getElementById('totalPostCount').innerText = '0';
-                gridContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
-                        কোনো পোস্ট নেই (0 Blogs)। অ্যাডমিন প্যানেল থেকে পোস্ট করলে এখানে আলাদা আলাদা কার্ড আকারে দেখাবে।
-                    </div>
-                `;
+                gridContainer.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">কোনো পোস্ট নেই।</div>`;
             }
         }
 
@@ -1251,7 +1211,7 @@
                         </div>
                     `;
                 } else {
-                    chatBody.innerHTML += `<div class="message bot-msg">অনেক ধন্যবাদ আপনার মূল্যবান মতামতের জন্য! আপনার কোনো কিছু জানার থাকলে সরাসরি লিখে পাঠাতে পারেন।</div>`;
+                    chatBody.innerHTML += `<div class="message bot-msg">অনেক ধন্যবাদ আপনার মূল্যবান মতামতের জন্য!</div>`;
                 }
                 chatBody.scrollTop = chatBody.scrollHeight;
 
@@ -1274,7 +1234,7 @@
             await _supabase.from('chat_logs').insert([{ type: 'Message', content: `${chatUser} [${chatEmail}]: ${text}` }]);
 
             setTimeout(() => {
-                chatBody.innerHTML += `<div class="message bot-msg">আপনার বার্তাটি আমি পেয়েছি। খুব শীঘ্রই ড্যাশবোর্ড থেকে উত্তর দেব ইনশাআল্লাহ!</div>`;
+                chatBody.innerHTML += `<div class="message bot-msg">আপনার বার্তাটি আমি পেয়েছি। খুব শীঘ্রই উত্তর দেব!</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }, 800);
         }
