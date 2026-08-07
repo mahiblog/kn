@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Reader | Space Portal</title>
+    <!-- ট্যাবের কর্নারে পার্মানেন্ট লোগো (ফেভিকন) -->
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-space: #010008;
+            --surface: rgba(10, 15, 30, 0.9);
+            --neon-cyan: #00f2fe;
+            --neon-purple: #9d4edd;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 35px rgba(0, 242, 254, 0.25);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-space); color: var(--text-main); min-height: 100vh; padding: 20px; }
+
+        .container { max-width: 800px; margin: 40px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px; box-shadow: var(--glow); position: relative; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--neon-cyan); text-decoration: none; font-family: 'Orbitron', sans-serif; font-size: 0.85rem; margin-bottom: 20px; transition: 0.3s; }
+        .back-btn:hover { text-shadow: 0 0 10px var(--neon-cyan); }
+        
+        .card-tag { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--neon-cyan); display: block; margin-bottom: 8px; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; color: white; margin-bottom: 12px; }
+        .date { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+        
+        .main-img-box { width: 100%; max-height: 450px; background: #000; border-radius: 12px; overflow: hidden; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; border: 1px solid var(--border); }
+        .main-img-box img { max-width: 100%; max-height: 430px; object-fit: contain; }
+
+        .blog-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 20px 0; }
+        .blog-gallery-grid img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; }
+        .blog-gallery-grid img:hover { transform: scale(1.03); border-color: var(--neon-cyan); }
+
+        .description { color: var(--text-muted); line-height: 1.8; font-size: 0.95rem; margin-bottom: 30px; white-space: pre-line; }
+
+        .comment-section { border-top: 1px solid var(--border); padding-top: 20px; }
+        .comment-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; max-height: 250px; overflow-y: auto; }
+        .comment-item { background: rgba(255,255,255,0.02); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.85rem; }
+        .comment-input-box { display: flex; gap: 10px; flex-wrap: wrap; }
+        .comment-input { flex: 1; min-width: 220px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 12px; border-radius: 8px; color: white; font-size: 0.9rem; outline: none; }
+        .comment-input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        .btn-comment { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-comment:hover { box-shadow: 0 0 15px var(--neon-cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Portal</a>
+        
+        <span id="artTag" class="card-tag"></span>
+        <h1 id="artTitle">লোড হচ্ছে...</h1>
+        <p id="artDate" class="date"></p>
+
+        <div class="main-img-box">
+            <img id="artMainImg" src="" alt="Article Image">
+        </div>
+
+        <div class="blog-gallery-grid" id="galleryContainer"></div>
+        <div id="artDesc" class="description"></div>
+
+        <div class="comment-section">
+            <h4 style="font-family:'Orbitron',sans-serif; font-size:1rem; color:white; margin-bottom:12px;"><i class="fa-solid fa-comments"></i> Reader Comments</h4>
+            <div class="comment-list" id="commentListContainer">
+                <div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই।</div>
+            </div>
+            <div class="comment-input-box">
+                <input type="text" id="commentInputText" class="comment-input" placeholder="আপনার কমেন্ট লিখুন...">
+                <button class="btn-comment" onclick="postComment()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://zpmptjenzhdjxoiuhfyk.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_U3Dj2qRx375nhMyLxuSsgw_7iFHyDeo';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const articleId = urlParams.get('id');
+
+        window.addEventListener('load', () => {
+            if (articleId) {
+                fetchSingleArticle(articleId);
+                loadArticleComments(articleId);
+            } else {
+                document.getElementById('artTitle').innerText = 'আর্টিকেল পাওয়া যায়নি!';
+            }
+        });
+
+        function convertDriveLink(url) {
+            if (!url) return '';
+            if (url.includes('drive.google.com')) {
+                const match = url.match(/\/d\/(.*?)\/|\?id=(.*?)(&|$)/);
+                const fileId = match ? (match[1] || match[2]) : null;
+                if (fileId) {
+                    return `https://lh3.googleusercontent.com/d/${fileId}`;
+                }
+            }
+            return url;
+        }
+
+        async function fetchSingleArticle(id) {
+            const { data, error } = await _supabase.from('articles').select('*').eq('id', id).single();
+            if (data) {
+                document.getElementById('artTag').innerText = data.category || 'Cosmos';
+                document.getElementById('artTitle').innerText = data.title;
+                document.getElementById('artDate').innerText = `Published: ${data.created_at ? data.created_at.split('T')[0] : 'Recent'}`;
+                document.getElementById('artMainImg').src = convertDriveLink(data.image_url);
+                document.getElementById('artDesc').innerText = data.description;
+
+                const galleryContainer = document.getElementById('galleryContainer');
+                if (data.gallery_images && Array.isArray(data.gallery_images)) {
+                    data.gallery_images.forEach(img => {
+                        let directImgUrl = convertDriveLink(img.trim());
+                        if (directImgUrl) {
+                            galleryContainer.innerHTML += `<img src="${directImgUrl}" alt="Gallery Image">`;
+                        }
+                    });
+                }
+            } else {
+                document.getElementById('artTitle').innerText = 'আর্টিকেলটি লোড করা সম্ভব হয়নি।';
+            }
+        }
+
+        async function loadArticleComments(id) {
+            const container = document.getElementById('commentListContainer');
+            const { data } = await _supabase.from('chat_logs').select('*').eq('type', `Comment_${id}`).order('created_at', { ascending: true });
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = `<div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</div>`;
+                return;
+            }
+            container.innerHTML = '';
+            data.forEach(c => {
+                container.innerHTML += `<div class="comment-item">${c.content}</div>`;
+            });
+        }
+
+        async function postComment() {
+            const input = document.getElementById('commentInputText');
+            const text = input.value.trim();
+            if(!text) return alert('কমেন্ট লিখুন');
+
+            let chatUser = localStorage.getItem('chat_user_name') || 'Visitor';
+            await _supabase.from('chat_logs').insert([{
+                type: `Comment_${articleId}`,
+                content: `<b>${chatUser}:</b> ${text}`
+            }]);
+
+            input.value = '';
+            loadArticleComments(articleId);
+        }
+    </script>
+</body>
+</html>
