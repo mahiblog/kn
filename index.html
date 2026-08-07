@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Portal | Muktasin Mahi</title>
+    <title>Space Portal |Kazim Nahian</title>
     <!-- ট্যাবের কর্নারে পার্মানেন্ট লোগো (ফেভিকন) -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -238,24 +238,19 @@
         .action-btn { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
         .action-btn:hover { background: var(--neon-cyan); color: var(--bg-space); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
 
-        .full-article-modal, .full-comic-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.94); backdrop-filter: blur(25px); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
-        .full-article-content, .full-comic-content { max-width: 750px; margin: 30px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
-        .close-full-article, .close-full-comic { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
-        .close-full-article:hover, .close-full-comic:hover { color: var(--neon-cyan); }
+        .full-comic-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.94); backdrop-filter: blur(25px); z-index: 3000; display: none; overflow-y: auto; padding: 20px; }
+        .full-comic-content { max-width: 750px; margin: 30px auto; background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 25px; box-shadow: 0 0 50px rgba(0, 242, 254, 0.3); position: relative; }
+        .close-full-comic { position: absolute; top: 15px; right: 20px; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
+        .close-full-comic:hover { color: var(--neon-cyan); }
 
         .comic-pages-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: center; }
         .comic-page-img { width: 100%; max-width: 650px; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 5px 20px rgba(0,0,0,0.6); object-fit: contain; }
-
-        .blog-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin: 20px 0; }
-        .blog-gallery-grid img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
-        .blog-gallery-grid img:hover { transform: scale(1.04); border-color: var(--neon-cyan); box-shadow: 0 0 15px rgba(0,242,254,0.4); }
-
-        .comment-section { margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px; }
-        .comment-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; max-height: 180px; overflow-y: auto; }
-        .comment-item { background: rgba(255,255,255,0.02); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 0.82rem; }
-        .comment-input-box { display: flex; gap: 8px; flex-wrap: wrap; }
-        .comment-input { flex: 1; min-width: 200px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 8px; color: white; font-size: 0.85rem; outline: none; }
-        .btn-comment { background: var(--neon-cyan); color: var(--bg-space); border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        
+        /* Optional Custom Boxes for Comics Reader */
+        .comic-custom-desc-box { background: rgba(0, 242, 254, 0.05); border: 1px dashed var(--neon-cyan); padding: 15px; border-radius: 10px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin: 15px 0; }
+        .comic-qr-box { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center; }
+        .comic-qr-box img { width: 120px; height: 120px; border-radius: 8px; border: 1px solid var(--neon-cyan); object-fit: contain; background: white; padding: 4px; }
+        .comic-qr-box span { font-size: 0.8rem; color: var(--text-muted); font-family: 'Orbitron', sans-serif; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1,0,8,0.85); backdrop-filter: blur(15px); z-index: 4000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .modal-box { background: var(--surface); border: 1px solid var(--neon-cyan); border-radius: 20px; padding: 30px 20px; width: 100%; max-width: 360px; box-shadow: 0 0 40px rgba(0, 242, 254, 0.3); text-align: center; position: relative; }
@@ -443,7 +438,7 @@
             </div>
         </div>
 
-        <!-- 2. Admin Controlled Video Screen (Category & Title Badge on TOP of Video) -->
+        <!-- 2. Admin Controlled Video Screen -->
         <section class="video-showcase-screen" id="adminVideoSection" style="display:none;">
             <div id="videoCategoryBadge"></div>
             <div class="video-container" id="videoFrameContainer">
@@ -490,14 +485,28 @@
         </button>
     </div>
 
-    <!-- Modals for Full Article, Comics, Join & Chat -->
+    <!-- Modals for Comics & Join -->
     <div class="full-comic-modal" id="fullComicModal">
         <div class="full-comic-content">
             <button class="close-full-comic" onclick="closeComicReader()">&times;</button>
             <span class="card-tag" style="display:block; margin-bottom:6px;">Science Comic Series</span>
             <h1 id="comicModalTitle" style="font-family:'Orbitron',sans-serif; color:white; font-size:1.3rem; margin-bottom:10px;"></h1>
+            
+            <!-- Optional Top Description Box -->
+            <div id="comicTopDescBox" class="comic-custom-desc-box" style="display:none;"></div>
+
             <p id="comicModalDesc" style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin-bottom:15px;"></p>
+            
             <div class="comic-pages-stack" id="comicPagesContainer"></div>
+
+            <!-- Optional Bottom Description Box -->
+            <div id="comicBottomDescBox" class="comic-custom-desc-box" style="display:none;"></div>
+
+            <!-- Optional QR Code Box -->
+            <div id="comicQrBox" class="comic-qr-box" style="display:none;">
+                <span>Scan for More Info</span>
+                <img id="comicQrImg" src="" alt="QR Code">
+            </div>
         </div>
     </div>
 
@@ -510,36 +519,11 @@
         </div>
     </div>
 
-    <div class="full-article-modal" id="fullArticleModal">
-        <div class="full-article-content">
-            <button class="close-full-article" onclick="closeFullArticle()">&times;</button>
-            <span id="full-art-tag" class="card-tag" style="display:block; margin-bottom:8px;"></span>
-            <h1 id="full-art-title" style="font-family:'Orbitron',sans-serif; color:white; font-size:1.4rem; margin-bottom:12px;"></h1>
-            <p id="full-art-date" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:15px;"></p>
-            <div style="width:100%; max-height:420px; overflow:hidden; border-radius:10px; margin-bottom:15px; display:flex; justify-content:center; background:#010008; padding:5px;">
-                <img id="full-art-img" src="" style="max-width:100%; max-height:400px; object-fit:contain;" alt="Full Image">
-            </div>
-            <div class="blog-gallery-grid" id="fullArtGalleryContainer"></div>
-            <div id="full-art-desc" style="color:var(--text-muted); line-height:1.7; font-size:0.95rem; margin-bottom:20px;"></div>
-
-            <div class="comment-section">
-                <h4 style="font-family:'Orbitron',sans-serif; font-size:0.95rem; color:white; margin-bottom:10px;"><i class="fa-solid fa-comments"></i> Reader Comments</h4>
-                <div class="comment-list" id="commentListContainer">
-                    <div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</div>
-                </div>
-                <div class="comment-input-box">
-                    <input type="text" id="commentInputText" class="comment-input" placeholder="আপনার কমেন্ট লিখুন...">
-                    <button class="btn-comment" onclick="triggerLoaderAndExecute(postComment)">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <button class="chat-float-btn" onclick="triggerLoaderAndExecute(toggleChat)" title="Talk to Writer"><i class="fa-solid fa-comment-dots"></i></button>
 
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
-            <h4>Talk to Writter Muktasin Mahi</h4>
+            <h4>Talk to Writer (Muktasin Mahi)</h4>
             <button class="close-chat" onclick="toggleChat()" style="background:none; border:none; color:white; cursor:pointer;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody"></div>
@@ -547,7 +531,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 <span>Kazim Nahian</span> | Mob: 09638183029 | KNWeb</p>
+        <p>&copy; 2026 <span>Muktasin Mahi</span> | Mob: 09638183029 | KNWeb</p>
         <p>All Cosmic Rights Reserved.</p>
     </footer>
 
@@ -581,7 +565,6 @@
 
         let articles = [];
         let comics = [];
-        let activeArticleId = null;
         let chatUser = localStorage.getItem('chat_user_name') || null;
         let chatEmail = localStorage.getItem('chat_user_email') || null;
         let musicTracks = [];
@@ -720,6 +703,34 @@
             if(!c) return;
             document.getElementById('comicModalTitle').innerText = c.title;
             document.getElementById('comicModalDesc').innerText = c.description;
+
+            // 1. Optional Top Description Box Handler
+            const topBox = document.getElementById('comicTopDescBox');
+            if (c.top_description) {
+                topBox.innerText = c.top_description;
+                topBox.style.display = 'block';
+            } else {
+                topBox.style.display = 'none';
+            }
+
+            // 2. Optional Bottom Description Box Handler
+            const bottomBox = document.getElementById('comicBottomDescBox');
+            if (c.bottom_description) {
+                bottomBox.innerText = c.bottom_description;
+                bottomBox.style.display = 'block';
+            } else {
+                bottomBox.style.display = 'none';
+            }
+
+            // 3. Optional QR Code Box Handler
+            const qrBox = document.getElementById('comicQrBox');
+            const qrImg = document.getElementById('comicQrImg');
+            if (c.qr_code_image) {
+                qrImg.src = convertDriveLink(c.qr_code_image);
+                qrBox.style.display = 'flex';
+            } else {
+                qrBox.style.display = 'none';
+            }
 
             const stackContainer = document.getElementById('comicPagesContainer');
             stackContainer.innerHTML = '';
@@ -887,7 +898,7 @@
                             
                             <div class="blog-actions">
                                 <button class="action-btn" onclick="triggerLoaderAndExecute(() => likeArticle('${art.id}'))"><i class="fa-solid fa-heart" style="color:#ef4444;"></i> <span id="likes_${art.id}">${art.likes_count || 0}</span></button>
-                                <button class="action-btn" onclick="triggerLoaderAndExecute(() => openFullArticle('${art.id}'))"><i class="fa-solid fa-book-open"></i> Read Full</button>
+                                <button class="action-btn" onclick="window.location.href='read-article.html?id=${art.id}'"><i class="fa-solid fa-book-open"></i> Read Full</button>
                                 <button class="action-btn" onclick="triggerLoaderAndExecute(() => shareArticle('${art.title}'))"><i class="fa-solid fa-share-nodes"></i></button>
                             </div>
                         </div>
@@ -907,68 +918,6 @@
             art.likes_count = (art.likes_count || 0) + 1;
             document.getElementById(`likes_${id}`).innerText = art.likes_count;
             await _supabase.from('articles').update({ likes_count: art.likes_count }).eq('id', id);
-        }
-
-        function openFullArticle(id) {
-            const art = articles.find(a => a.id == id);
-            if(!art) return;
-            activeArticleId = art.id;
-
-            document.getElementById('full-art-tag').innerText = art.category;
-            document.getElementById('full-art-title').innerText = art.title;
-            document.getElementById('full-art-date').innerText = `Published: ${art.created_at ? art.created_at.split('T')[0] : 'Recent'}`;
-            document.getElementById('full-art-img').src = art.image_url;
-            document.getElementById('full-art-desc').innerText = art.description;
-
-            const galleryContainer = document.getElementById('fullArtGalleryContainer');
-            galleryContainer.innerHTML = '';
-            if (art.gallery_images && Array.isArray(art.gallery_images) && art.gallery_images.length > 0) {
-                art.gallery_images.forEach(imgUrl => {
-                    const imgTag = document.createElement('img');
-                    imgTag.src = imgUrl;
-                    galleryContainer.appendChild(imgTag);
-                });
-            }
-
-            document.getElementById('fullArticleModal').style.display = 'block';
-            loadArticleComments(art.id);
-        }
-
-        function closeFullArticle() {
-            document.getElementById('fullArticleModal').style.display = 'none';
-        }
-
-        async function loadArticleComments(articleId) {
-            const container = document.getElementById('commentListContainer');
-            const { data } = await _supabase.from('chat_logs').select('*').eq('type', `Comment_${articleId}`).order('created_at', { ascending: true });
-            if(!data || data.length === 0) {
-                container.innerHTML = `<div class="comment-item" style="color:var(--text-muted); text-align:center;">কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</div>`;
-                return;
-            }
-            container.innerHTML = '';
-            data.forEach(c => {
-                let div = document.createElement('div');
-                div.className = 'comment-item';
-                div.innerHTML = `${c.content}`;
-                container.appendChild(div);
-            });
-        }
-
-        async function postComment() {
-            if(!activeArticleId) return;
-            const input = document.getElementById('commentInputText');
-            const text = input.value.trim();
-            if(!text) return alert('কমেন্ট লিখুন');
-
-            const commenter = chatUser ? chatUser : 'Visitor';
-            await _supabase.from('chat_logs').insert([{
-                type: `Comment_${activeArticleId}`,
-                content: `<b>${commenter}:</b> ${text}`
-            }]);
-
-            triggerSpaceshipAnimation();
-            input.value = '';
-            loadArticleComments(activeArticleId);
         }
 
         function shareArticle(title) {
