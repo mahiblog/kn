@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | কাজিম নাহইয়ান</title>
+    <title>Admin Dashboard | Kazim Nahian</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -69,7 +69,7 @@
     <!-- Dashboard Screen -->
     <div class="dashboard-container" id="dashboardScreen">
         <div class="dash-header">
-            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel - কাজিম নাহইয়ান</h2>
+            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel - Kazim Nahian</h2>
             <div>
                 <a href="index.html" class="btn-neon" style="padding: 8px 15px; font-size: 0.8rem; text-decoration: none; display: inline-block; margin-right: 10px;" target="_blank">View Site</a>
                 <button class="btn-neon" style="background: #ef4444; width: auto; padding: 8px 15px; font-size: 0.8rem;" onclick="logoutAdmin()">Logout</button>
@@ -82,7 +82,7 @@
                 <h3><i class="fa-solid fa-user-gear"></i> Profile & Logo Setup</h3>
                 <div class="admin-form-group">
                     <label>Admin Name</label>
-                    <input type="text" id="profileName" class="admin-input" value="কাজিম নাহইয়ান">
+                    <input type="text" id="profileName" class="admin-input" value="Kazim Nahian">
                 </div>
                 <div class="admin-form-group">
                     <label>Upload Profile Picture</label>
@@ -238,8 +238,8 @@
             </div>
             <div class="admin-form-group">
                 <label>Add FAQ / Quick Knowledge Base (Question & Answer)</label>
-                <input type="text" id="faqQuestionInput" class="admin-input" placeholder="প্রশ্ন (যেমন: কাজিম নাহইয়ান কে?)">
-                <input type="text" id="faqAnswerInput" class="admin-input" placeholder="উত্তর (যেমন: সে ঝিকরগাছা, যশোরের একজন টেন্থ গ্রেডের সায়েন্সের ছাত্র...)">
+                <input type="text" id="faqQuestionInput" class="admin-input" placeholder="প্রশ্ন (যেমন: Writer কে?)">
+                <input type="text" id="faqAnswerInput" class="admin-input" placeholder="উত্তর (যেমন: সে একজন টেন্থ গ্রেডের সায়েন্সের ছাত্র...)">
             </div>
             <button class="btn-neon" style="width: auto; padding: 10px 25px; margin-bottom: 15px;" onclick="saveAiKnowledgeBase()"><i class="fa-solid fa-floppy-disk"></i> Save AI Knowledge Base</button>
 
@@ -352,7 +352,7 @@
         function verifyAdmin() {
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
-            if (u === 'mahi' && p === 'admin123') {
+            if (u === 'mahi' && p === 'mahi100') {
                 localStorage.setItem('is_admin', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'block';
