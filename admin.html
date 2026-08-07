@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Kazim Nahian</title>
+    <title>Admin Dashboard | কাজিম নাহইয়ান</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -69,7 +69,7 @@
     <!-- Dashboard Screen -->
     <div class="dashboard-container" id="dashboardScreen">
         <div class="dash-header">
-            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel - Kazim Nahian</h2>
+            <h2><i class="fa-solid fa-gauge-high"></i> Admin Control Panel - কাজিম নাহইয়ান</h2>
             <div>
                 <a href="index.html" class="btn-neon" style="padding: 8px 15px; font-size: 0.8rem; text-decoration: none; display: inline-block; margin-right: 10px;" target="_blank">View Site</a>
                 <button class="btn-neon" style="background: #ef4444; width: auto; padding: 8px 15px; font-size: 0.8rem;" onclick="logoutAdmin()">Logout</button>
@@ -82,7 +82,7 @@
                 <h3><i class="fa-solid fa-user-gear"></i> Profile & Logo Setup</h3>
                 <div class="admin-form-group">
                     <label>Admin Name</label>
-                    <input type="text" id="profileName" class="admin-input" value="Kazim Nahian">
+                    <input type="text" id="profileName" class="admin-input" value="কাজিম নাহইয়ান">
                 </div>
                 <div class="admin-form-group">
                     <label>Upload Profile Picture</label>
@@ -127,7 +127,10 @@
                     <label>Description / Full Content</label>
                     <textarea id="newDesc" class="admin-input" rows="3" placeholder="Description or summary..."></textarea>
                 </div>
-                <button class="btn-neon" id="saveArticleBtn" onclick="publishContentDirect()">Publish to Cloud</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-neon" id="saveArticleBtn" onclick="publishContentDirect()">Publish to Cloud</button>
+                    <button class="btn-neon" id="cancelArticleBtn" style="background: #475569; display:none;" onclick="resetArticleForm()">Cancel</button>
+                </div>
             </div>
         </div>
 
@@ -177,7 +180,10 @@
                 <label>QR Code Image URL (অপশনাল - একেবারে শেষে দেখাবে)</label>
                 <input type="text" id="comicQrInput" class="admin-input" placeholder="https://...">
             </div>
-            <button class="btn-neon" id="saveComicBtn" style="width: auto; padding: 10px 25px;" onclick="uploadComicBook()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-neon" id="saveComicBtn" style="width: auto; padding: 10px 25px;" onclick="uploadComicBook()"><i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic</button>
+                <button class="btn-neon" id="cancelComicBtn" style="background: #475569; width: auto; padding: 10px 25px; display:none;" onclick="resetComicForm()">Cancel</button>
+            </div>
 
             <div style="overflow-x: auto; margin-top: 15px;">
                 <table class="admin-table">
@@ -238,8 +244,8 @@
             </div>
             <div class="admin-form-group">
                 <label>Add FAQ / Quick Knowledge Base (Question & Answer)</label>
-                <input type="text" id="faqQuestionInput" class="admin-input" placeholder="প্রশ্ন (যেমন: Writer কে?)">
-                <input type="text" id="faqAnswerInput" class="admin-input" placeholder="উত্তর (যেমন: সে একজন টেন্থ গ্রেডের সায়েন্সের ছাত্র...)">
+                <input type="text" id="faqQuestionInput" class="admin-input" placeholder="প্রশ্ন (যেমন: কাজিম নাহইয়ান কে?)">
+                <input type="text" id="faqAnswerInput" class="admin-input" placeholder="উত্তর (যেমন: সে ঝিকরগাছা, যশোরের একজন টেন্থ গ্রেডের সায়েন্সের ছাত্র...)">
             </div>
             <button class="btn-neon" style="width: auto; padding: 10px 25px; margin-bottom: 15px;" onclick="saveAiKnowledgeBase()"><i class="fa-solid fa-floppy-disk"></i> Save AI Knowledge Base</button>
 
@@ -352,7 +358,7 @@
         function verifyAdmin() {
             const u = document.getElementById('adminUser').value.trim();
             const p = document.getElementById('adminPass').value.trim();
-            if (u === 'mahi' && p === 'mahi100') {
+            if (u === 'mahi' && p === 'admin123') {
                 localStorage.setItem('is_admin', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardScreen').style.display = 'block';
@@ -508,9 +514,9 @@
             document.getElementById('statTotalPosts').innerText = postCount || 0;
         }
 
-        // ================= COMIC FUNCTIONS (WITH TOP/BOTTOM DESC & QR) =================
+        // ================= COMIC FUNCTIONS (ROBUST FIX) =================
         async function uploadComicBook() {
-            const editId = document.getElementById('editingComicId').value;
+            const editId = document.getElementById('editingComicId').value.trim();
             const title = document.getElementById('comicTitleInput').value.trim();
             const poster = document.getElementById('comicPosterInput').value.trim();
             const pages = document.getElementById('comicPagesInput').value.trim();
@@ -523,14 +529,14 @@
 
             const payload = { title, poster_image: poster, pages_links: pages, description: description || 'Sci-Fi Comic Series', top_description, bottom_description, qr_code_image };
 
-            if (editId) {
+            if (editId !== "" && editId !== "null" && editId !== "undefined") {
                 const { error } = await _supabase.from('comics').update(payload).eq('id', editId);
                 if (!error) {
                     alert('কমিক সফলভাবে আপডেট হয়েছে!');
                     resetComicForm();
                     loadAdminComicList();
                 } else {
-                    alert('কমিক আপডেট করতে সমস্যা হয়েছে।');
+                    alert('কমিক আপডেট করতে সমস্যা হয়েছে: ' + error.message);
                 }
             } else {
                 const { error } = await _supabase.from('comics').insert([payload]);
@@ -539,7 +545,7 @@
                     resetComicForm();
                     loadAdminComicList();
                 } else {
-                    alert('কমিক আপলোড করতে সমস্যা হয়েছে।');
+                    alert('কমিক আপলোড করতে সমস্যা হয়েছে: ' + error.message);
                 }
             }
         }
@@ -567,7 +573,7 @@
         }
 
         function loadComicForEdit(id) {
-            const c = cachedComics.find(item => item.id == id);
+            const c = cachedComics.find(item => String(item.id) === String(id));
             if(!c) return;
             document.getElementById('editingComicId').value = c.id;
             document.getElementById('comicTitleInput').value = c.title;
@@ -580,6 +586,7 @@
 
             document.getElementById('comicFormHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Comic`;
             document.getElementById('saveComicBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Comic`;
+            document.getElementById('cancelComicBtn').style.display = 'inline-block';
             window.scrollTo({ top: document.getElementById('comicFormHeading').offsetTop, behavior: 'smooth' });
         }
 
@@ -594,6 +601,7 @@
             document.getElementById('comicQrInput').value = '';
             document.getElementById('comicFormHeading').innerHTML = `<i class="fa-solid fa-mask"></i> Science Comics Cloud Manager`;
             document.getElementById('saveComicBtn').innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Publish Comic`;
+            document.getElementById('cancelComicBtn').style.display = 'none';
         }
 
         async function deleteComic(id) {
@@ -603,9 +611,9 @@
             loadAdminComicList();
         }
 
-        // ================= ARTICLE / BLOG FUNCTIONS (WITH EDIT & PUBLISH) =================
+        // ================= ARTICLE / BLOG FUNCTIONS (ROBUST FIX) =================
         async function publishContentDirect() {
-            const editId = document.getElementById('editingArticleId').value;
+            const editId = document.getElementById('editingArticleId').value.trim();
             const type = document.getElementById('contentType').value;
             const rawTitle = document.getElementById('newTitle').value.trim();
             const category = document.getElementById('newTag').value.trim();
@@ -624,7 +632,7 @@
             const publishTimestamp = customDate ? new Date(customDate).toISOString() : new Date().toISOString();
             const formattedTitle = rawTitle.startsWith('[') ? rawTitle : `[${type}] ${rawTitle}`;
 
-            if (editId) {
+            if (editId !== "" && editId !== "null" && editId !== "undefined") {
                 let updatePayload = {
                     title: formattedTitle,
                     category: category || 'Cosmos',
@@ -642,11 +650,10 @@
                     loadAdminArticles();
                     refreshAnalytics();
                 } else {
-                    alert('পোস্ট আপডেট করতে সমস্যা হয়েছে।');
+                    alert('পোস্ট আপডেট করতে সমস্যা হয়েছে: ' + error.message);
                 }
             } else {
                 const newPost = {
-                    id: Date.now(),
                     title: formattedTitle,
                     category: category || 'Cosmos',
                     image_url: mediaUrl,
@@ -662,7 +669,7 @@
                     loadAdminArticles();
                     refreshAnalytics();
                 } else {
-                    alert('পাবলিশ করতে সমস্যা হয়েছে।');
+                    alert('পাবলিশ করতে সমস্যা হয়েছে: ' + error.message);
                 }
             }
         }
@@ -692,7 +699,7 @@
         }
 
         function loadArticleForEdit(id) {
-            const art = cachedArticles.find(item => item.id == id);
+            const art = cachedArticles.find(item => String(item.id) === String(id));
             if(!art) return;
             document.getElementById('editingArticleId').value = art.id;
             document.getElementById('newTitle').value = art.title.replace(/^\[.*?\]\s*/, '');
@@ -701,6 +708,7 @@
             
             document.getElementById('blogFormHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Content`;
             document.getElementById('saveArticleBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Content`;
+            document.getElementById('cancelArticleBtn').style.display = 'inline-block';
             window.scrollTo({ top: document.getElementById('blogFormHeading').offsetTop, behavior: 'smooth' });
         }
 
@@ -713,6 +721,7 @@
             document.getElementById('customDate').value = '';
             document.getElementById('blogFormHeading').innerHTML = `<i class="fa-solid fa-pen-nib"></i> Publish Content`;
             document.getElementById('saveArticleBtn').innerHTML = `Publish to Cloud`;
+            document.getElementById('cancelArticleBtn').style.display = 'none';
         }
 
         async function deleteArticle(id) {
