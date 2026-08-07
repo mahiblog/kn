@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Control Center | Space Portal</title>
+    <title>Video Control | Space Portal</title>
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -125,7 +125,7 @@
             const isMuted = document.getElementById('vidMuted').checked;
 
             if(!title || !url) {
-                alert('দয়া করে ভিডিওর নাম এবং ইউআরএল দিন!');
+                alert('দয়া করে ভিডিওর নাম এবং ইউআরএল দিন!');
                 return;
             }
 
@@ -139,22 +139,23 @@
             };
 
             if (editId) {
-                const { error } = await _supabase.from('site_videos').update(videoPayload).eq('id', editId);
+                // আপডেট করার সময় id ম্যাচ করে ডাটা পাঠাতে হবে
+                const { error } = await _supabase.from('site_videos').update(videoPayload).eq('id', Number(editId));
                 if (!error) {
-                    alert('ভিডিও সফলভাবে আপডেট করা হয়েছে!');
+                    alert('ভিডিও সফলভাবে আপডেট করা হয়েছে!');
                     resetForm();
                     fetchVideoPlaylist();
                 } else {
-                    alert('আপডেট করতে সমস্যা হয়েছে।');
+                    alert('আপডেট করতে সমস্যা হয়েছে: ' + (error.message || ''));
                 }
             } else {
                 const { error } = await _supabase.from('site_videos').insert([videoPayload]);
                 if (!error) {
-                    alert('সফলভাবে নতুন ভিডিও যুক্ত হয়েছে!');
+                    alert('সফলভাবে নতুন ভিডিও যুক্ত হয়েছে!');
                     resetForm();
                     fetchVideoPlaylist();
                 } else {
-                    alert('সেভ করতে সমস্যা হয়েছে।');
+                    alert('সেভ করতে সমস্যা হয়েছে: ' + (error.message || ''));
                 }
             }
         }
@@ -189,7 +190,7 @@
         }
 
         function loadVideoForEdit(id) {
-            const v = allVideosCache.find(item => item.id == id);
+            const v = allVideosCache.find(item => String(item.id) === String(id));
             if(!v) return;
 
             document.getElementById('editingVideoId').value = v.id;
@@ -218,8 +219,12 @@
 
         async function deleteVideo(id) {
             if(confirm('আপনি কি এই ভিডিওটি ডিলিট করতে চান?')) {
-                await _supabase.from('site_videos').delete().eq('id', id);
-                fetchVideoPlaylist();
+                const { error } = await _supabase.from('site_videos').delete().eq('id', Number(id));
+                if (!error) {
+                    fetchVideoPlaylist();
+                } else {
+                    alert('ডিলিট করতে সমস্যা হয়েছে।');
+                }
             }
         }
     </script>
