@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Control | Space Portal</title>
+    <title>Video Control Center | Space Portal</title>
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1FY-0zIs4qg0fy3UW-2ivrbJ8TPrgouCm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -92,7 +92,10 @@
                 <input type="checkbox" id="vidMuted" checked>
                 <label for="vidMuted">Mute Video on Autoplay (সাউন্ড মিউট রাখুন)</label>
             </div>
-            <button class="btn-neon" id="saveBtn" onclick="saveOrUpdateVideo()"><i class="fa-solid fa-upload"></i> Save Video to Database</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-neon" id="saveBtn" onclick="saveOrUpdateVideo()"><i class="fa-solid fa-upload"></i> Save Video to Database</button>
+                <button class="btn-neon" id="cancelBtn" style="background: #475569; display: none;" onclick="resetForm()">Cancel</button>
+            </div>
         </div>
 
         <!-- 2. Active Playlist Manager -->
@@ -116,7 +119,7 @@
         });
 
         async function saveOrUpdateVideo() {
-            const editId = document.getElementById('editingVideoId').value;
+            const editId = document.getElementById('editingVideoId').value.trim();
             const title = document.getElementById('vidTitle').value.trim();
             const url = document.getElementById('vidUrl').value.trim();
             const category = document.getElementById('vidCategory').value;
@@ -138,15 +141,14 @@
                 is_muted: isMuted
             };
 
-            if (editId) {
-                // আপডেট করার সময় id ম্যাচ করে ডাটা পাঠাতে হবে
-                const { error } = await _supabase.from('site_videos').update(videoPayload).eq('id', Number(editId));
+            if (editId !== "" && editId !== "null" && editId !== "undefined") {
+                const { error } = await _supabase.from('site_videos').update(videoPayload).eq('id', editId);
                 if (!error) {
                     alert('ভিডিও সফলভাবে আপডেট করা হয়েছে!');
                     resetForm();
                     fetchVideoPlaylist();
                 } else {
-                    alert('আপডেট করতে সমস্যা হয়েছে: ' + (error.message || ''));
+                    alert('আপডেট করতে সমস্যা হয়েছে: ' + error.message);
                 }
             } else {
                 const { error } = await _supabase.from('site_videos').insert([videoPayload]);
@@ -155,7 +157,7 @@
                     resetForm();
                     fetchVideoPlaylist();
                 } else {
-                    alert('সেভ করতে সমস্যা হয়েছে: ' + (error.message || ''));
+                    alert('সেভ করতে সমস্যা হয়েছে: ' + error.message);
                 }
             }
         }
@@ -203,6 +205,7 @@
 
             document.getElementById('formHeading').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit Video Details`;
             document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Video Data`;
+            document.getElementById('cancelBtn').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -215,15 +218,16 @@
             document.getElementById('vidMuted').checked = true;
             document.getElementById('formHeading').innerHTML = `<i class="fa-solid fa-circle-plus"></i> Add Video to Playlist`;
             document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-upload"></i> Save Video to Database`;
+            document.getElementById('cancelBtn').style.display = 'none';
         }
 
         async function deleteVideo(id) {
             if(confirm('আপনি কি এই ভিডিওটি ডিলিট করতে চান?')) {
-                const { error } = await _supabase.from('site_videos').delete().eq('id', Number(id));
+                const { error } = await _supabase.from('site_videos').delete().eq('id', id);
                 if (!error) {
                     fetchVideoPlaylist();
                 } else {
-                    alert('ডিলিট করতে সমস্যা হয়েছে।');
+                    alert('ডিলিট করতে সমস্যা হয়েছে: ' + error.message);
                 }
             }
         }
